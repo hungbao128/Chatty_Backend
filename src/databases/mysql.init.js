@@ -14,7 +14,6 @@ class MysqlConnection{
             dialect: 'mysql'
         });
 
-
         this.#sequelize.authenticate()
             .then(() => {
                 console.log('MySQL connected');
@@ -37,5 +36,7 @@ class MysqlConnection{
     }
 }
 
-module.exports = MysqlConnection;
-module.sequelize = MysqlConnection.getInstance().getSequelize();
+
+const sequelize = MysqlConnection.getInstance().getSequelize();
+
+module.exports = {MysqlConnection, sequelize};

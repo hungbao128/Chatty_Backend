@@ -2,7 +2,7 @@ const {Server} = require('socket.io');
 const express = require('express');
 const {createServer} = require('http');
 const MongoDBConnection = require('./databases/mongodb.init');
-const MysqlConnection = require('./databases/mysql.init');
+const {MysqlConnection} = require('./databases/mysql.init');
 
 const SERVER_PORT = 3000;
 
