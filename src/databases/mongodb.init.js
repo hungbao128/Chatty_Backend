@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const EnvConfig = require("./../envConfig");
 
 class MongoDBConnection {
   static #instance;
@@ -17,10 +18,7 @@ class MongoDBConnection {
 
   #connect() {
     mongoose
-      .connect(
-        "mongodb+srv://dmcm10:ddryhqwert1@cluster0.5oqxf7n.mongodb.net/chatty?retryWrites=true&w=majority",
-        {}
-      )
+      .connect(EnvConfig.MONGODB_URL, {})
       .then(() => {
         console.log("MongoDB connected");
       })
