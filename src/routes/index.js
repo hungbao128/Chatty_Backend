@@ -1,6 +1,4 @@
 const express = require('express');
-const User = require('../models/mysql/user.model');
-
 const router = express.Router();
 
 
