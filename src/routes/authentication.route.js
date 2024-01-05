@@ -9,5 +9,6 @@ const router = express.Router();
 
 router.post('/register', catchAsync(validate(registerValidation)), catchAsync(authenticationController.register));
 router.post('/login', catchAsync(validate(loginValidation)), catchAsync(authenticationController.login));
+router.post('/refreshToken', catchAsync(authenticationController.refreshToken));
 
 module.exports = router;

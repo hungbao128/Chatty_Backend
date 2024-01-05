@@ -1,7 +1,7 @@
 const BadRequest = require('../core/BadRequest');
 const envConfig = require('../envConfig');
 const UserHelper = require('../helpers/UserHelper');
-const { generateToken } = require('../utils/jwt');
+const { generateToken, verifyToken } = require('../utils/jwt');
 const userRepository = require('./../repositories/User.repository');
 
 class AuthenticationService{
@@ -23,6 +23,13 @@ class AuthenticationService{
                 expiresIn: envConfig.REFRESH_TOKEN_EXPIRES_IN
             }
         })
+    }
+
+    async verifyRefreshToken(token){
+        return await verifyToken({
+            token,
+            secretKey: envConfig.REFRESH_TOKEN_SECRET
+        });
     }
 
     async register({email, password, phone, name, dateOfBirth}){
@@ -82,6 +89,23 @@ class AuthenticationService{
                 refresh_token
             },
             user: UserHelper.generateUserResponse(user)
+        }
+    }
+
+    async refreshToken({token}){
+        // 1. Verify refresh token
+        const decoded = await this.verifyRefreshToken(token);
+        // 2. Generate access token, refresh token
+        const [access_token, refresh_token] = await Promise.all([
+            this.generateAccessToken(decoded.id),
+            this.generateRefreshToken(decoded.id)
+        ]); 
+        // 3. Return token
+        return {
+            token: {
+                access_token,
+                refresh_token
+            }
         }
     }
 }
