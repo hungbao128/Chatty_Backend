@@ -12,6 +12,10 @@ class UserRepository{
     async findByPhone(phone){
         return await UserModel.findOne({phone});
     }
+
+    async findById(id){
+        return await UserModel.findById(id);
+    }
 }
 
 module.exports = new UserRepository();
