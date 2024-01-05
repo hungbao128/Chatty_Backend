@@ -56,6 +56,34 @@ class AuthenticationService{
             user: UserHelper.generateUserResponse(user)
         }
     }
+
+    async login({phone, password}){
+        // 1. Check if user exists
+        const user = await userRepository.findByPhone(phone);
+        if(!user){
+            throw new BadRequest('Bad credentials.');
+        }
+
+        // 2. Compare password
+        const isPasswordValid = await user.comparePassword(password);
+        if(!isPasswordValid){
+            throw new BadRequest('Bad credentials.');
+        }
+
+        // 3. Generate token
+        const [access_token, refresh_token] = await Promise.all([
+            this.generateAccessToken(user._id),
+            this.generateRefreshToken(user._id)
+        ]);
+        // 4. Return token
+        return {
+            token: {
+                access_token,
+                refresh_token
+            },
+            user: UserHelper.generateUserResponse(user)
+        }
+    }
 }
 
 module.exports = new AuthenticationService();

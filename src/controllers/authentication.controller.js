@@ -10,6 +10,16 @@ class AuthenticationController {
             data: result
         });
     }
+
+    async login(req, res, next){
+        const result = await AuthenticationService.login({...req.body});
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Login successfully',
+            data: result
+        });
+    }
 }
 
 module.exports = new AuthenticationController();

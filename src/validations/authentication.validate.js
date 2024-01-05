@@ -31,6 +31,22 @@ const registerValidation = Joi.object({
     }),
 })
 
+const loginValidation = Joi.object({
+    phone: Joi.string().length(10).regex(/^[0-9]+$/).required().messages({
+        "string.empty": "Please provide your phone number.",
+        "any.required": "Please provide your phone number.",
+        "string.length": "Phone number should have 10 digits.",
+        "string.pattern.base": "Phone number should contain only number."
+    }),
+
+    password: Joi.string().min(6).required().messages({
+        "string.empty": "Please provide your password.",
+        "string.min": "Password should have a minimum length of 6",
+        "any.required": "Please provide your password."
+    }),
+})
+
 module.exports = {
-    registerValidation
+    registerValidation,
+    loginValidation
 }
