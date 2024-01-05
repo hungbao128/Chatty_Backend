@@ -2,6 +2,7 @@ const {Server} = require('socket.io');
 const express = require('express');
 const {createServer} = require('http');
 const MongoDBConnection = require('./databases/mongodb.init');
+const { isProdction } = require('./envConfig');
 
 const SERVER_PORT = 8555;
 
@@ -29,6 +30,7 @@ class ApplicationServer {
 
   #routes(app) {
     app.use("/api/v1", require("./routes"));
+    
     app.use("*", (req, res, next) => {
       res.status(404).json({
         message: "Route not found",
@@ -50,12 +52,18 @@ class ApplicationServer {
   #globalErrorHandling(app) {
     app.use((error, req, res, next) => {
       const statusCode = error.statusCode || 500;
-      const status = statusCode.startWiths("4") ? "fail" : "error";
+      const status = `${statusCode}`.startsWith("4") ? "fail" : "error";
       const message = error.message || "Internal server error";
+      let stack = error.stack;
 
+      if(isProdction){
+        stack = undefined;
+      }
+      
       res.status(statusCode).json({
         status,
         message,
+        stack
       });
     });
   }

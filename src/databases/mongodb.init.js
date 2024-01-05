@@ -25,6 +25,10 @@ class MongoDBConnection {
       .catch((error) => {
         console.log("Error connecting to MongoDB", error);
       });
+
+      if(!EnvConfig.isProdction()){
+        mongoose.set('debug', true);
+      }
   }
 }
 
