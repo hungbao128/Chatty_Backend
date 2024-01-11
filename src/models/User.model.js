@@ -28,7 +28,15 @@ const UserSchema = new Schema({
         required: true
     },
 
+    avatar:{
+        type: String,
+        default: 'https://res.cloudinary.com/diribdgsz/image/upload/v1704685598/chat-app/clone-avatar_a6lb3y.png'
+    },
 
+    background:{
+        type: String,
+        default: 'https://res.cloudinary.com/diribdgsz/image/upload/v1704685988/chat-app/clone-background_bb1l7i.png'
+    },
 }, {
     timestamps: true
 })

@@ -12,14 +12,16 @@ class UserHelper{
     }
 
     static generateUserResponse(user){
-        const { _id, name, email, phone, dateOfBirth } = user;
+        const { _id, name, email, phone, dateOfBirth, avatar, background } = user;
 
         return {
             id: _id,
             name,
             email,
             phone,
-            dateOfBirth
+            dateOfBirth,
+            avatar,
+            background
         }
     }
 }
