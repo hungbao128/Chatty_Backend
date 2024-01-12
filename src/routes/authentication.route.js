@@ -1,7 +1,7 @@
 const express = require('express');
 const validate = require('../middlewares/validation.middleware');
 const catchAsync = require('./../utils/catchAsync');
-const { registerValidation, loginValidation } = require('../validations/authentication.validate');
+const { registerValidation, loginValidation } = require('../validations/authentication.validation');
 const authenticationController = require('../controllers/authentication.controller');
 const authentication = require('../middlewares/authentication.middleware');
 
