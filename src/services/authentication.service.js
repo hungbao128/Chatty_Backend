@@ -60,7 +60,7 @@ class AuthenticationService{
                 access_token,
                 refresh_token
             },
-            user: UserHelper.generateUserResponse(user)
+            user: UserHelper.generateUserResponse(user.toObject())
         }
     }
 
@@ -88,7 +88,7 @@ class AuthenticationService{
                 access_token,
                 refresh_token
             },
-            user: UserHelper.generateUserResponse(user)
+            user: UserHelper.generateUserResponse(user.toObject())
         }
     }
 

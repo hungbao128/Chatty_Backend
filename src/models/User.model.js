@@ -28,6 +28,17 @@ const UserSchema = new Schema({
         required: true
     },
 
+    bio: {
+        type: String,
+        default: ''
+    },
+
+    gender: {
+        type: String,
+        enum: ['male', 'female'],
+        default: 'male'
+    },
+
     avatar:{
         type: String,
         default: 'https://res.cloudinary.com/diribdgsz/image/upload/v1704685598/chat-app/clone-avatar_a6lb3y.png'
