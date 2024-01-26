@@ -11,6 +11,15 @@ class UserController{
             data: result
         });
     }
+
+    async getMe(req, res, next){
+        const {user} = req;
+
+        return res.status(200).json({
+            message: 'Get user successfully.',
+            data: user
+        });
+    }
 }
 
 module.exports = new UserController();

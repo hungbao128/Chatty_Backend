@@ -1,5 +1,6 @@
 const BadRequest = require("../core/BadRequest");
 const envConfig = require("../envConfig");
+const UserHelper = require("../helpers/UserHelper");
 const userService = require("../services/user.service");
 const { verifyToken } = require("../utils/jwt");
 
@@ -17,7 +18,7 @@ const authentication = async(req, res, next) => {
         if(!user){
             throw new BadRequest('Invalid token.');
         }
-        req.user = user;
+        req.user = UserHelper.generateUserResponse(user.toObject());
         next();
     } catch (error) {
         if(error.name === 'TokenExpiredError'){

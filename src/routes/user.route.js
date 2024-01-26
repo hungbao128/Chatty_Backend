@@ -8,5 +8,6 @@ const { updateUserValidation } = require('../validations/user.validation');
 const router = express.Router();
 
 router.put('/updateMe', catchAsync(validate(updateUserValidation)), catchAsync(authentication), catchAsync(userController.update));
+router.get('/getMe', catchAsync(authentication), catchAsync(userController.getMe));
 
 module.exports = router;
