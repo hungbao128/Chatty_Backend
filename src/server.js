@@ -1,5 +1,6 @@
 const {Server} = require('socket.io');
 const express = require('express');
+const cors = require('cors');
 const {createServer} = require('http');
 const MongoDBConnection = require('./databases/mongodb.init');
 const { isProdction } = require('./envConfig');
@@ -26,6 +27,7 @@ class ApplicationServer {
   #standardMiddleware(app) {
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
+    app.use(cors());
   }
 
   #routes(app) {
