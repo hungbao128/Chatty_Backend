@@ -13,8 +13,10 @@ class UserService {
     }
 
     async updateAvatar(id, file){    
-        const result = await cloudinary.uploader.upload(file.path);
-        
+        const result = await cloudinary.uploader.upload(file.path, {
+            folder: 'chatty-app',
+        });
+
         const data = await UserRepository.update(id, {avatar: result.url});
         return UserHelper.generateUserResponse(data.toObject());
     }
