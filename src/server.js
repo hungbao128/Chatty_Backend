@@ -47,7 +47,7 @@ class ApplicationServer {
         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
       },
     });
-
+    
     return io;
   }
 

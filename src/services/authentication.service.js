@@ -1,6 +1,7 @@
 const BadRequest = require('../core/BadRequest');
 const envConfig = require('../envConfig');
 const UserHelper = require('../helpers/UserHelper');
+const { hashPassword } = require('../utils/bcrypt');
 const { generateToken, verifyToken } = require('../utils/jwt');
 const userRepository = require('./../repositories/User.repository');
 
@@ -107,6 +108,22 @@ class AuthenticationService{
                 refresh_token
             }
         }
+    }
+
+    async changePassword({userId, oldPassword, newPassword}){
+        const user = await userRepository.findById(userId);
+        if(!user){
+            throw new BadRequest('User not found.');
+        }
+
+        const isPasswordValid = await user.comparePassword(oldPassword);
+
+        if(!isPasswordValid){
+            throw new BadRequest('Old password is incorrect.');
+        }
+
+        user.password = hashPassword(newPassword);
+        await user.save();
     }
 }
 

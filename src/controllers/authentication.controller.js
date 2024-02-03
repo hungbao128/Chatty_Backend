@@ -30,6 +30,17 @@ class AuthenticationController {
             data: result
         });
     }
+
+    async changePassword(req, res, next){
+        const {user} = req;
+        const {oldPassword, newPassword} = req.body;
+        const result = await AuthenticationService.changePassword({userId: user.id, oldPassword, newPassword});
+
+        return res.status(200).json({
+            message: 'Change password successfully.',
+            data: result
+        });
+    }
 }
 
 module.exports = new AuthenticationController();

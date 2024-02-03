@@ -20,6 +20,17 @@ class UserController{
             data: user
         });
     }
+
+    async updateAvatar(req, res, next){
+        const {user} = req;
+        const {file} = req;
+
+        const result = await userService.updateAvatar(user._id, file);
+        return res.status(200).json({
+            message: 'Update avatar successfully.',
+            data: result
+        })
+    }
 }
 
 module.exports = new UserController();
