@@ -122,7 +122,7 @@ class AuthenticationService{
             throw new BadRequest('Old password is incorrect.');
         }
 
-        user.password = hashPassword(newPassword);
+        user.password = newPassword;
         await user.save();
     }
 }

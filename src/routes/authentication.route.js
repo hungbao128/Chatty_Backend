@@ -10,6 +10,6 @@ const router = express.Router();
 router.post('/register', catchAsync(validate(registerValidation)), catchAsync(authenticationController.register));
 router.post('/login', catchAsync(validate(loginValidation)), catchAsync(authenticationController.login));
 router.post('/refreshToken', catchAsync(authenticationController.refreshToken));
-router.post('/change_password', catchAsync(authentication), catchAsync(authenticationController.changePassword));
+router.post('/changePassword', catchAsync(authentication), catchAsync(authenticationController.changePassword));
 
 module.exports = router;
