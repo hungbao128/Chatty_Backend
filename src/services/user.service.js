@@ -20,6 +20,15 @@ class UserService {
         const data = await UserRepository.update(id, {avatar: result.url});
         return UserHelper.generateUserResponse(data.toObject());
     }
+
+    async updateBackground(id, file){
+        const result = await cloudinary.uploader.upload(file.path, {
+            folder: 'chatty-app',
+        });
+
+        const data = await UserRepository.update(id, {background: result.url});
+        return UserHelper.generateUserResponse(data.toObject());
+    }
 }
 
 module.exports = new UserService();

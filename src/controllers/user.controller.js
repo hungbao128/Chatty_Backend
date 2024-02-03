@@ -31,6 +31,17 @@ class UserController{
             data: result
         })
     }
+
+    async updateBackground(req, res, next){
+        const {user} = req;
+        const {file} = req;
+
+        const result = await userService.updateBackground(user._id, file);
+        return res.status(200).json({
+            message: 'Update background successfully.',
+            data: result
+        })
+    }
 }
 
 module.exports = new UserController();
