@@ -47,8 +47,7 @@ const UserSchema = new Schema({
     background:{
         type: String,
         default: 'https://res.cloudinary.com/diribdgsz/image/upload/v1704685988/chat-app/clone-background_bb1l7i.png'
-    },
-    friends: [String]
+    }
 }, {
     timestamps: true
 })

@@ -1,7 +1,6 @@
 const BadRequest = require('../core/BadRequest');
 const envConfig = require('../envConfig');
 const UserHelper = require('../helpers/UserHelper');
-const { hashPassword } = require('../utils/bcrypt');
 const { generateToken, verifyToken } = require('../utils/jwt');
 const userRepository = require('./../repositories/User.repository');
 

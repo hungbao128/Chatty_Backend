@@ -14,7 +14,7 @@ const UserFriendSchema = new mongoose.Schema({
     },
 
     status: {
-        type: Number,
+        type: String,
         enums: [
             'pending',
             'accepted',
