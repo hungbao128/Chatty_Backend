@@ -7,6 +7,7 @@ class UserFriendService{
 
         if(await UserFriendRepository.isFriend(userId, friendId)) throw new BadRequest('You are already friends.');
 
+        if(await UserFriendRepository.isPendingRequest(userId, friendId)) throw new BadRequest('You already request add friend.');
         return await UserFriendRepository.requestAddFriend(userId, friendId);
     }
 

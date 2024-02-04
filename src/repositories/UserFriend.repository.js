@@ -14,6 +14,17 @@ class UserFriendRepository{
         });
         return count > 0;
     }
+
+    async isPendingRequest(userId, friendId){
+        const count = await UserFriendModel.countDocuments({
+            $or: [
+                {requester: userId, recipient: friendId, status: 'pending'},
+                {requester: friendId, recipient: userId, status: 'pending'}
+            
+            ]
+        });
+        return count > 0;
+    }
 }
 
 module.exports = new UserFriendRepository();
