@@ -11,6 +11,12 @@ class UserFriendService{
         return await UserFriendRepository.requestAddFriend(userId, friendId);
     }
 
+    async acceptFriendRequest(userId, requesterId){
+        if(await UserFriendRepository.isFriend(userId, requesterId)) throw new BadRequest('You are already friends.');
+        
+        return await UserFriendRepository.acceptFriendRequest(userId, requesterId);
+    }
+
     async removeFriend(userId, friendId){
         // Remove friend from user
     }

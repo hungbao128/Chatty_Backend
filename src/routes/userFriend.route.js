@@ -7,5 +7,6 @@ const router = express.Router();
 
 
 router.post('/request/:id', catchAsync(authentication), catchAsync(userFriendController.requestAddFriend));
+router.post('/accept/:id', catchAsync(authentication), catchAsync(userFriendController.acceptFriendRequest));
 
 module.exports = router;

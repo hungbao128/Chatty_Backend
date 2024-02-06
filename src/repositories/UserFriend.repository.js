@@ -15,6 +15,10 @@ class UserFriendRepository{
         return count > 0;
     }
 
+    async acceptFriendRequest(userId, requesterId){
+        return await UserFriendModel.updateOne({requester: requesterId, recipient: userId}, {status: 'accepted'});
+    }
+
     async isPendingRequest(userId, friendId){
         const count = await UserFriendModel.countDocuments({
             $or: [
