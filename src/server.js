@@ -1,4 +1,5 @@
 const {Server} = require('socket.io');
+const fs = require('fs');
 const express = require('express');
 const cors = require('cors');
 const {createServer} = require('http');
@@ -13,12 +14,16 @@ class ApplicationServer {
   }
 
   start() {
+    this.#initalizeFolderUpload();
     this.#connectDatabase();
     this.#standardMiddleware(this.app);
     this.#routes(this.app);
     this.#globalErrorHandling(this.app);
     this.#startServer(this.app);
   }
+    #initalizeFolderUpload(){
+      if(!fs.existsSync('uploads')) fs.mkdirSync('uploads');
+    }
 
     #connectDatabase(){
         MongoDBConnection.getInstance();
