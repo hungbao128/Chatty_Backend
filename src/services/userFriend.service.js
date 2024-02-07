@@ -17,6 +17,14 @@ class UserFriendService{
         return await UserFriendRepository.acceptFriendRequest(userId, requesterId);
     }
 
+    async rejectFriendRequest(userId, requesterId){
+        return await UserFriendRepository.rejectFriendRequest(userId, requesterId);
+    }
+
+    async cancelFriendRequest(userId, friendId){
+        return await UserFriendRepository.rejectFriendRequest(userId, friendId);
+    }
+
     async removeFriend(userId, friendId){
         // Remove friend from user
     }

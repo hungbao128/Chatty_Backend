@@ -19,6 +19,26 @@ class UserFriendController{
             message: "Friend request accepted successfully!"
         });
     }
+
+    async rejectFriendRequest(req, res, next){
+        const {user} = req;
+        const {id} = req.params;
+        await userFriendService.rejectFriendRequest(user._id, id);
+
+        return res.status(200).json({
+            message: "Friend request rejected successfully!"
+        });
+    }
+
+    async cancelFriendRequest(req, res, next){
+        const {user} = req;
+        const {id} = req.params;
+        await userFriendService.cancelFriendRequest(user._id, id);
+
+        return res.status(200).json({
+            message: "Friend request canceled successfully!"
+        });
+    }
 }
 
 module.exports = new UserFriendController();

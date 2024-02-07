@@ -19,6 +19,14 @@ class UserFriendRepository{
         return await UserFriendModel.updateOne({requester: requesterId, recipient: userId}, {status: 'accepted'});
     }
 
+    async rejectFriendRequest(userId, requesterId){
+        return await UserFriendModel.deleteOne({requester: requesterId, recipient: userId});
+    }
+
+    async rejectFriendRequest(userId, friendId){
+        return await UserFriendModel.deleteOne({requester: userId, recipient: friendId});
+    }
+
     async isPendingRequest(userId, friendId){
         const count = await UserFriendModel.countDocuments({
             $or: [
