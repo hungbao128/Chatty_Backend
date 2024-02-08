@@ -29,6 +29,10 @@ class UserService {
         const data = await UserRepository.update(id, {background: result.url});
         return UserHelper.generateUserResponse(data.toObject());
     }
+
+    async findByPhone(phone){
+        return await UserRepository.findByPhone(phone);
+    }
 }
 
 module.exports = new UserService();

@@ -42,6 +42,17 @@ class UserController{
             data: result
         })
     }
+
+    async findByPhone(req, res, next){
+        const {phone} = req.params;
+
+        const result = await userService.findByPhone(phone);
+
+        return res.status(200).json({
+            message: 'Find user by phone successfully.',
+            data: result
+        });
+    }
 }
 
 module.exports = new UserController();
