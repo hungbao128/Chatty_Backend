@@ -16,11 +16,16 @@ const ConservationSchema = new Schema({
         ref: 'User'
     },
 
-    members: [Schema.Types.ObjectId],
+    members: {
+        type: [Schema.Types.ObjectId],
+        ref: 'User',
+        default: []
+    },
 
     lastMessage: {
         type: Schema.Types.ObjectId,
-        ref: 'Message'
+        ref: 'Message',
+        default: null
     },
 });
 
