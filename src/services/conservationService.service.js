@@ -1,6 +1,7 @@
 const conservationRepository = require("../repositories/Conservation.repository");
 const ServerErrorRequest = require("../core/ServerErrorRequest");
 const BadRequest = require("../core/BadRequest");
+const ConservationHelper = require("../helpers/ConservationHelper");
 
 class ConservationService {
     async conservationPopulate(conservation){
@@ -14,13 +15,13 @@ class ConservationService {
 
         const existingConservation = await conservationRepository.findPrivateConservationByMembers(creatorId, userId);
 
-        if(existingConservation) return await this.conservationPopulate(existingConservation);
+        if(existingConservation) return ConservationHelper.generateConservation((await this.conservationPopulate(existingConservation)), creatorId);
         
         const conservation = await conservationRepository.create({creatorId, userId});
 
         if(!conservation) throw new ServerErrorRequest('Cannot create conservation.');
 
-        return await this.conservationPopulate(conservation);
+        return ConservationHelper.generateConservation((await this.conservationPopulate(conservation)), creatorId);
     }
 }
 

@@ -6,6 +6,11 @@ const ConservationSchema = new Schema({
         default: ''
     },
 
+    iamge: {
+        type: String,
+        default: ''
+    },
+
     type: {
         type: String,
         enum: ['private', 'group']
