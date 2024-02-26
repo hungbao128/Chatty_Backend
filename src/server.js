@@ -65,6 +65,7 @@ class ApplicationServer {
 
       if(isProdction){
         stack = undefined;
+        statusCode === 500 ? message = "Internal server error" : message;
       }
       
       res.status(statusCode).json({

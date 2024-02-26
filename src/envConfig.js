@@ -2,6 +2,7 @@ const dotenv = require("dotenv");
 dotenv.config({});
 
 class EnvConfig {
+  NODE_ENV;
   MONGODB_URL;
   ACCESS_TOKEN_SECRET;
   ACCESS_TOKEN_EXPIRES_IN;
@@ -13,6 +14,7 @@ class EnvConfig {
   }
 
   constructor() {
+    this.NODE_ENV = process.env.NODE_ENV;
     this.MONGODB_URL = process.env.MONGODB_URL;
     this.ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
     this.ACCESS_TOKEN_EXPIRES_IN = process.env.ACCESS_TOKEN_EXPIRES_IN;
