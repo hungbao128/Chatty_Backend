@@ -5,7 +5,7 @@
     +  request:
 ```
   headers: {
-  Authorization: Bearer {token}
+    Authorization: Bearer {token}
   }
 ```
 
@@ -15,7 +15,7 @@
     +  request:
 ```
   headers: {
-  Authorization: Bearer {token}
+    Authorization: Bearer {token}
   }
 ```
 
@@ -25,7 +25,7 @@
     +  request:
 ```
   headers: {
-  Authorization: Bearer {token}
+    Authorization: Bearer {token}
   }
 ```
 
@@ -35,7 +35,7 @@
     +  request:
 ```
   headers: {
-  Authorization: Bearer {token}
+    Authorization: Bearer {token}
   }
 ```
 
@@ -45,6 +45,6 @@
     +  request:
 ```
   headers: {
-  Authorization: Bearer {token}
+    Authorization: Bearer {token}
   }
 ```
