@@ -22,6 +22,10 @@ class UserFriendService{
     }
 
     async cancelFriendRequest(userId, friendId){
+        if(await UserFriendRepository.isFriend(userId, friendId)) throw new BadRequest('You are already friends.');
+        
+        if(!await UserFriendRepository.isPendingRequest(userId, friendId)) throw new BadRequest('You don\'t have pending request.');
+
         return await UserFriendRepository.rejectFriendRequest(userId, friendId);
     }
 
