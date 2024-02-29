@@ -30,8 +30,8 @@ class UserService {
         return UserHelper.generateUserResponse(data.toObject());
     }
 
-    async findByPhone(phone){
-        return await UserRepository.findByPhone(phone);
+    async findByPhone(phone, currentId){
+        return await UserRepository.findUserByPhone(phone, currentId);
     }
 }
 

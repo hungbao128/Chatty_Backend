@@ -20,6 +20,10 @@ class UserRepository{
     async update(id, data){
         return await UserModel.findOneAndUpdate({_id: id}, data, {new: true});
     }
+
+    async findUserByPhone(phone, currentId){
+        return await UserModel.findOne({phone, _id: {$ne: currentId}})
+    }
 }
 
 module.exports = new UserRepository();
