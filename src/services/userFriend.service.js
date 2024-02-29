@@ -1,5 +1,6 @@
 const BadRequest = require("../core/BadRequest");
 const UserFriendRepository = require("../repositories/UserFriend.repository");
+const UserFriendHelper = require("../helpers/UserFriendHelper");
 
 class UserFriendService{
     async requestAddFriend(userId, friendId){
@@ -36,7 +37,9 @@ class UserFriendService{
     }
 
     async getCurrentUserFriends(userId){
-        return await UserFriendRepository.getCurrentUserFriends(userId);
+        const friends = await UserFriendRepository.getCurrentUserFriends(userId);
+        
+        return friends.map(friend => UserFriendHelper.generateUserFriend(friend, userId));
     }
 }
 

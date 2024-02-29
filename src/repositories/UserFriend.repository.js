@@ -42,7 +42,7 @@ class UserFriendRepository{
                 {requester: userId, status: 'accepted'},
                 {recipient: userId, status: 'accepted'}
             ]
-        });
+        }).populate('requester recipient', '-password -createdAt -updatedAt -email -__v');
     }
 
     async removeFriend(friendId){

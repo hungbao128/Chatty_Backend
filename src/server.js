@@ -60,7 +60,7 @@ class ApplicationServer {
     app.use((error, req, res, next) => {
       const statusCode = error.statusCode || 500;
       const status = `${statusCode}`.startsWith("4") ? "fail" : "error";
-      const message = error.message || "Internal server error";
+      let message = error.message || "Internal server error";
       let stack = error.stack;
 
       if(isProdction){
