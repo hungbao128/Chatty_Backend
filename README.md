@@ -1,6 +1,6 @@
 Friends: 
   - Add friend:
-    +  url: friends/request/:userId
+    +  url: ```friends/request/:userId```
     +  method: POST
     +  request:
 ```
