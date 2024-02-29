@@ -1,4 +1,4 @@
-Friends: 
+## Friends: 
   - Add friend:
     +  url: ```friends/request/:userId```
     +  method: POST
