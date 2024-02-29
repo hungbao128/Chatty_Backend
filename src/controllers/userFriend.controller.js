@@ -44,6 +44,11 @@ class UserFriendController{
         const {user} = req;
 
         const result = await userFriendService.getCurrentUserFriends(user._id);
+
+        return res.status(200).json({
+            message: "Get current user friends successfully!",
+            data: result
+        });
     }
 }
 
