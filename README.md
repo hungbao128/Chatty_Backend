@@ -48,3 +48,13 @@
     Authorization: Bearer {token}
   }
 ```
+
+  - Remove friend:
+    +  url: ```api/v1/friends/remove/:userId```
+    +  method: POST
+    +  request:
+```
+  headers: {
+    Authorization: Bearer {token}
+  }
+```
