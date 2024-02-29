@@ -2,6 +2,7 @@ const UserFriendModel = require('./../models/UserFriend.model');
 
 class UserFriendRepository{
     async requestAddFriend(userId, friendId){
+        // console.log(`USER ID: ${userId} \t FRIEND ID: ${friendId}`);
         return await UserFriendModel.create({requester: userId, recipient: friendId, status: 'pending'});
     }
 
@@ -32,7 +33,12 @@ class UserFriendRepository{
     }
 
     async isPendingRequest(userId, friendId){
-        const count = await UserFriendModel.countDocuments({_id: friendId, recipient: userId, status: 'pending'});
+        const count = await UserFriendModel.countDocuments({
+            $or: [
+                {requester: userId, recipient: friendId, status: 'pending'},
+                {requester: friendId, recipient: userId, status: 'pending'}
+            ]
+        });
         return count > 0;
     }
 
