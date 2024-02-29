@@ -1,6 +1,6 @@
 ## Friends: 
   - Add friend:
-    +  url: ```friends/request/:userId```
+    +  url: ```api/v1/friends/request/:userId```
     +  method: POST
     +  request:
 ```
@@ -10,7 +10,7 @@
 ```
 
   - Cancel friend request:
-    +  url: ```friends/cancel/:userId```
+    +  url: ```api/v1/friends/cancel/:userId```
     +  method: POST
     +  request:
 ```
@@ -20,7 +20,7 @@
 ```
 
   - Accept friend request:
-    +  url: ```friends/accept/:userId```
+    +  url: ```api/v1/friends/accept/:userId```
     +  method: POST
     +  request:
 ```
@@ -30,7 +30,7 @@
 ```
 
   - Reject friend request:
-    +  url: ```friends/reject/:userId```
+    +  url: ```api/v1/friends/reject/:userId```
     +  method: POST
     +  request:
 ```
@@ -40,7 +40,7 @@
 ```
 
   - Current user friends:
-    +  url: ```friends```
+    +  url: ```api/v1/friends```
     +  method: GET
     +  request:
 ```
