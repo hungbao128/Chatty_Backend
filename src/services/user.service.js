@@ -1,6 +1,7 @@
 const UserRepository = require("../repositories/User.repository");
 const UserHelper= require('./../helpers/UserHelper');
 const cloudinary = require('./../configs/cloudinary');
+const BadRequest = require("../core/BadRequest");
 
 class UserService {
     async findById(id){
@@ -31,7 +32,11 @@ class UserService {
     }
 
     async findByPhone(phone, currentId){
-        return await UserRepository.findUserByPhone(phone, currentId);
+        const user = await UserRepository.findUserByPhone(phone, currentId);
+
+        if(!user) throw new BadRequest('User not found');
+
+        return UserHelper.generateUserResponse(user.toObject());
     }
 }
 
