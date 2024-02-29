@@ -37,6 +37,15 @@ class UserFriendRepository{
         });
         return count > 0;
     }
+
+    async getCurrentUserFriends(userId){
+        return await UserFriendModel.find({
+            $or: [
+                {requester: userId, status: 'accepted'},
+                {recipient: userId, status: 'accepted'}
+            ]
+        });
+    }
 }
 
 module.exports = new UserFriendRepository();

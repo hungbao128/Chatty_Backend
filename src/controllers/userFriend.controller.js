@@ -39,6 +39,12 @@ class UserFriendController{
             message: "Friend request canceled successfully!"
         });
     }
+
+    async getCurrentUserFriends(req, res, next){
+        const {user} = req;
+
+        const result = await userFriendService.getCurrentUserFriends(user._id);
+    }
 }
 
 module.exports = new UserFriendController();

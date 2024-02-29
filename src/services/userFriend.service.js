@@ -29,8 +29,8 @@ class UserFriendService{
         // Remove friend from user
     }
 
-    async getFriends(userId){
-        // Get all friends of user
+    async getCurrentUserFriends(userId){
+        return await UserFriendRepository.getCurrentUserFriends(userId);
     }
 }
 
