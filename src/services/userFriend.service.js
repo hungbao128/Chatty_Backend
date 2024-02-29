@@ -11,18 +11,18 @@ class UserFriendService{
         return await UserFriendRepository.requestAddFriend(userId, friendId);
     }
 
-    async acceptFriendRequest(userId, requesterId){
-        if(await UserFriendRepository.isFriend(userId, requesterId)) throw new BadRequest('You are already friends.');
-        
-        return await UserFriendRepository.acceptFriendRequest(userId, requesterId);
+    async acceptFriendRequest(userId, friendId){
+        if(await UserFriendRepository.isUserFriend(userId, friendId)) throw new BadRequest('You are already friends.');
+
+        return await UserFriendRepository.acceptFriendRequest(userId, friendId);
     }
 
-    async rejectFriendRequest(userId, requesterId){
-        return await UserFriendRepository.rejectFriendRequest(userId, requesterId);
+    async rejectFriendRequest(userId, friendId){
+        return await UserFriendRepository.rejectFriendRequest(userId, friendId);
     }
 
     async cancelFriendRequest(userId, friendId){
-        if(await UserFriendRepository.isFriend(userId, friendId)) throw new BadRequest('You are already friends.');
+        if(await UserFriendRepository.isUserFriend(userId, friendId)) throw new BadRequest('You are already friends.');
         
         if(!await UserFriendRepository.isPendingRequest(userId, friendId)) throw new BadRequest('You don\'t have pending request.');
 
@@ -30,9 +30,9 @@ class UserFriendService{
     }
 
     async removeFriend(userId, friendId){
-        if(!await UserFriendRepository.isFriend(userId, friendId)) throw new BadRequest('You are not friends.');
+        if(!await UserFriendRepository.isUserFriend(userId, friendId)) throw new BadRequest('You are not friends.');
 
-        return await UserFriendRepository.removeFriend(userId, friendId);
+        return await UserFriendRepository.removeFriend(friendId);
     }
 
     async getCurrentUserFriends(userId){

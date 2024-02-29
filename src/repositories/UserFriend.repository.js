@@ -15,12 +15,16 @@ class UserFriendRepository{
         return count > 0;
     }
 
-    async acceptFriendRequest(userId, requesterId){
-        return await UserFriendModel.updateOne({requester: requesterId, recipient: userId}, {status: 'accepted'});
+    async acceptFriendRequest(userId, friendId){
+        return await UserFriendModel.updateOne({_id: friendId, recipient: userId}, {status: 'accepted'});
     }
 
-    async rejectFriendRequest(userId, requesterId){
-        return await UserFriendModel.deleteOne({requester: requesterId, recipient: userId});
+    async isUserFriend(userId, friendId){
+        return await UserFriendModel.countDocuments({_id: friendId, recipient: userId, status: 'accepted'});
+    }
+
+    async rejectFriendRequest(userId, friendId){
+        return await UserFriendModel.deleteOne({_id: friendId, recipient: userId});
     }
 
     async rejectFriendRequest(userId, friendId){
@@ -28,13 +32,7 @@ class UserFriendRepository{
     }
 
     async isPendingRequest(userId, friendId){
-        const count = await UserFriendModel.countDocuments({
-            $or: [
-                {requester: userId, recipient: friendId, status: 'pending'},
-                {requester: friendId, recipient: userId, status: 'pending'}
-            
-            ]
-        });
+        const count = await UserFriendModel.countDocuments({_id: friendId, recipient: userId, status: 'pending'});
         return count > 0;
     }
 
@@ -47,13 +45,8 @@ class UserFriendRepository{
         });
     }
 
-    async removeFriend(userId, friendId){
-        return await UserFriendModel.deleteOne({
-            $or: [
-                {requester: userId, recipient: friendId, status: 'accepted'},
-                {requester: friendId, recipient: userId, status: 'accepted'}
-            ]
-        });
+    async removeFriend(friendId){
+        return await UserFriendModel.deleteOne({_id: friendId});
     }
 }
 
