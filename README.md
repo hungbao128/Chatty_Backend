@@ -38,3 +38,13 @@ Friends:
   Authorization: Bearer {token}
   }
 ```
+
+  - Current user friends:
+    +  url: ```friends```
+    +  method: GET
+    +  request:
+```
+  headers: {
+  Authorization: Bearer {token}
+  }
+```
