@@ -50,6 +50,16 @@ class UserFriendController{
             data: result
         });
     }
+
+    async removeFriend(req, res, next){
+        const {user} = req;
+        const {id} = req.params;
+        await userFriendService.removeFriend(user._id, id);
+
+        return res.status(200).json({
+            message: "Remove friend successfully!"
+        });
+    }
 }
 
 module.exports = new UserFriendController();

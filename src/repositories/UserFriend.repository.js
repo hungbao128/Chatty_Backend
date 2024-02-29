@@ -46,6 +46,15 @@ class UserFriendRepository{
             ]
         });
     }
+
+    async removeFriend(userId, friendId){
+        return await UserFriendModel.deleteOne({
+            $or: [
+                {requester: userId, recipient: friendId, status: 'accepted'},
+                {requester: friendId, recipient: userId, status: 'accepted'}
+            ]
+        });
+    }
 }
 
 module.exports = new UserFriendRepository();

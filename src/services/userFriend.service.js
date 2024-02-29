@@ -30,7 +30,9 @@ class UserFriendService{
     }
 
     async removeFriend(userId, friendId){
-        // Remove friend from user
+        if(!await UserFriendRepository.isFriend(userId, friendId)) throw new BadRequest('You are not friends.');
+
+        return await UserFriendRepository.removeFriend(userId, friendId);
     }
 
     async getCurrentUserFriends(userId){

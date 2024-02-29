@@ -10,6 +10,7 @@ router.post('/request/:id', catchAsync(authentication), catchAsync(userFriendCon
 router.post('/accept/:id', catchAsync(authentication), catchAsync(userFriendController.acceptFriendRequest));
 router.post('/reject/:id', catchAsync(authentication), catchAsync(userFriendController.rejectFriendRequest));
 router.post('/cancel/:id', catchAsync(authentication), catchAsync(userFriendController.rejectFriendRequest));
+router.post('/remove/:id', catchAsync(authentication), catchAsync(userFriendController.removeFriend));
 router.get('/', catchAsync(authentication), catchAsync(userFriendController.getCurrentUserFriends));
 
 module.exports = router;
