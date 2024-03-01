@@ -16,6 +16,15 @@ class UserFriendRepository{
         return count > 0;
     }
 
+    async findUserRelationship(userId, friendId){
+        return await UserFriendModel.findOne({
+            $or: [
+                {requester: userId, recipient: friendId},
+                {requester: friendId, recipient: userId}
+            ]
+        });
+    }
+
     async acceptFriendRequest(userId, friendId){
         return await UserFriendModel.updateOne({_id: friendId, recipient: userId}, {status: 'accepted'});
     }

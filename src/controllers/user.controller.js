@@ -53,6 +53,13 @@ class UserController{
             data: result
         });
     }
+
+    async findUserById(req, res, next){
+        return res.status(200).json({
+            message: 'Find user successfully.',
+            data: await userService.findUserById(req.user._id, req.params.id)
+        });
+    }
 }
 
 module.exports = new UserController();

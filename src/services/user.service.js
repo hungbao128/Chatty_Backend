@@ -2,6 +2,7 @@ const UserRepository = require("../repositories/User.repository");
 const UserHelper= require('./../helpers/UserHelper');
 const cloudinary = require('./../configs/cloudinary');
 const BadRequest = require("../core/BadRequest");
+const UserFriendRepository = require("../repositories/UserFriend.repository");
 
 class UserService {
     async findById(id){
@@ -37,6 +38,17 @@ class UserService {
         if(!user) throw new BadRequest('User not found');
 
         return UserHelper.generateUserResponse(user.toObject());
+    }
+
+    async findUserById(currentUserId, id){
+        const [user, userFriend] = await Promise.all([UserRepository.findUserById(id), UserFriendRepository.findUserRelationship(currentUserId, id)]); ;
+
+        if(!user) throw new BadRequest('User not found');
+
+        const result = UserHelper.generateUserResponse(user.toObject());
+        result.friend = userFriend;
+
+        return result;
     }
 }
 

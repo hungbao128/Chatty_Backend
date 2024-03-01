@@ -13,5 +13,6 @@ router.get('/getMe', catchAsync(authentication), catchAsync(userController.getMe
 router.get('/findByPhone/:phone', catchAsync(authentication), catchAsync(userController.findByPhone));
 router.put('/updateAvatar', catchAsync(authentication), uploadDisk.single('avatar'), catchAsync(userController.updateAvatar));
 router.put('/updateBackground', catchAsync(authentication), uploadDisk.single('background'), catchAsync(userController.updateBackground));
+router.get('/:id', catchAsync(authentication), catchAsync(userController.findUserById));
 
 module.exports = router;
