@@ -29,6 +29,11 @@ const registerValidation = Joi.object({
         "any.required": "Please provide your date of birth.",
         "date.base": "Please provide a valid date of birth."
     }),
+
+    gender: Joi.string().required().valid('male', 'female').messages({
+        "any.valid": "Please provide a valid gender.",
+        "any.required": "Please provide your gender."
+    })
 })
 
 const loginValidation = Joi.object({

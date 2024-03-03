@@ -32,7 +32,7 @@ class AuthenticationService{
         });
     }
 
-    async register({email, password, phone, name, dateOfBirth}){
+    async register({email, password, phone, name, dateOfBirth, gender}){
 
         // 1. Check if email already exists
         const existingEmail = await userRepository.findByEmail(email);
@@ -47,7 +47,7 @@ class AuthenticationService{
         }
 
         // 3. Create user
-        const userObj = UserHelper.createUserObject({name, email, password, phone, dateOfBirth});
+        const userObj = UserHelper.createUserObject({name, email, password, phone, dateOfBirth, gender});
         const user = await userRepository.create(userObj);
         // 4. Generate token
         const [access_token, refresh_token] = await Promise.all([

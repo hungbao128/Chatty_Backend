@@ -11,7 +11,7 @@ class UserService {
 
     async updateUser(id, {name, dateOfBirth}){
         const result = await UserRepository.update(id, {name, dateOfBirth});
-        return UserHelper.generateUserResponse(result);
+        return UserHelper.generateUserResponse(result.toObject());
     }
 
     async updateAvatar(id, file){    
