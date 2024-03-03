@@ -11,6 +11,16 @@ class ConservationController {
             data: result
         });
     }
+
+    async getUserConservations(req, res, next){
+        const {_id} = req.user;
+        const result = await conservationService.getUserConservations(_id);
+
+        return res.status(200).json({
+            message: 'Get user conservations successfully.',
+            data: result
+        });
+    }
 }
 
 module.exports = new ConservationController();

@@ -5,5 +5,6 @@ const conservationController = require('../controllers/conservation.controller')
 
 const router = Router();
 
-router.post('/open/:id', catchAsync(authentication), catchAsync(conservationController.openConservation))
+router.post('/open/:id', catchAsync(authentication), catchAsync(conservationController.openConservation));
+router.get('/', catchAsync(authentication), catchAsync(conservationController.getUserConservations));
 module.exports = router;

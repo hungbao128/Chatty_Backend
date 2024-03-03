@@ -20,6 +20,10 @@ class ConservationRepository {
             ]
         });
     }
+
+    async findConservationsByUserId(userId){
+        return await ConservationModel.find({members: {$in: [userId]}}).sort({updatedAt: -1});
+    }
 }
 
 module.exports = new ConservationRepository();
