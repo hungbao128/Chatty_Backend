@@ -32,7 +32,7 @@ const registerValidation = Joi.object({
 
     gender: Joi.string().required().valid('male', 'female').messages({
         "any.valid": "Please provide a valid gender.",
-        "any.required": "Please provide your gender."
+        "any.required": "Please provide your gender"
     })
 })
 

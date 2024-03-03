@@ -9,8 +9,8 @@ class UserService {
         return await UserRepository.findById(id);
     }
 
-    async updateUser(id, {name, dateOfBirth}){
-        const result = await UserRepository.update(id, {name, dateOfBirth});
+    async updateUser(id, {name, dateOfBirth, gender}){
+        const result = await UserRepository.update(id, {name, dateOfBirth, gender});
         return UserHelper.generateUserResponse(result.toObject());
     }
 
