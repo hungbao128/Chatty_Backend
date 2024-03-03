@@ -1,13 +1,14 @@
 const _ = require('lodash');
 
 class UserHelper{
-    static createUserObject({name, email, password, phone, dateOfBirth}){
+    static createUserObject({name, email, password, phone, dateOfBirth, gender}){
         const user = {
             name,
             email,
             password,
             phone,
-            dateOfBirth
+            dateOfBirth,
+            gender
         }
 
         return user;
