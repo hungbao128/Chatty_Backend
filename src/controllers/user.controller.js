@@ -3,7 +3,7 @@ const userService = require("../services/user.service");
 class UserController{
 
     async update(req, res, next){
-        const {name, dateOfBirth} = req.body;
+        const {name, dateOfBirth, gender} = req.body;
         const result = await userService.updateUser(req.user._id, {name, dateOfBirth, gender});
 
         return res.status(200).json({

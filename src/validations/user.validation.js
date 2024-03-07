@@ -11,7 +11,10 @@ const updateUserValidation = Joi.object({
         "date.base": "Please provide a valid date of birth."
     }),
 
-    // gender: Joi.enum
+    gender: Joi.string().required().valid('male', 'female').messages({
+        "any.required": "Please provide your gender",
+        "any.only": "Please provide a valid gender"
+    })
 })
 
 module.exports = {
