@@ -37,10 +37,6 @@ class UserFriendRepository{
         return await UserFriendModel.deleteOne({_id: friendId, recipient: userId});
     }
 
-    async rejectFriendRequest(userId, friendId){
-        return await UserFriendModel.deleteOne({requester: userId, recipient: friendId});
-    }
-
     async isPendingRequest(userId, friendId){
         const count = await UserFriendModel.countDocuments({
             $or: [
@@ -58,6 +54,10 @@ class UserFriendRepository{
                 {recipient: userId, status: 'accepted'}
             ]
         }).populate('requester recipient', '-password -createdAt -updatedAt -email -__v');
+    }
+
+    async getFriendRequests(userId){
+        return await UserFriendModel.find({recipient: userId, status: 'pending'}).populate('requester', '-password -createdAt -updatedAt -email -__v');
     }
 
     async removeFriend(friendId){

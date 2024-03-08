@@ -41,6 +41,12 @@ class UserFriendService{
         
         return friends.map(friend => UserFriendHelper.generateUserFriend(friend, userId));
     }
+    
+    async getFriendRequests(userId){
+        const requests = await UserFriendRepository.getFriendRequests(userId);
+        
+        return requests.map(request => UserFriendHelper.generateFriendRequest(request, userId));
+    }
 }
 
 module.exports = new UserFriendService();

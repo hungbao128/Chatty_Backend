@@ -51,6 +51,17 @@ class UserFriendController{
         });
     }
 
+    async getFriendRequests(req, res, next){
+        const {user} = req;
+
+        const result = await userFriendService.getFriendRequests(user._id);
+
+        return res.status(200).json({
+            message: "Get friend requests successfully!",
+            data: result
+        });
+    }
+
     async removeFriend(req, res, next){
         const {user} = req;
         const {id} = req.params;
