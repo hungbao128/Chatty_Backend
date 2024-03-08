@@ -44,8 +44,8 @@ class UserFriendService{
     
     async getFriendRequests(userId){
         const requests = await UserFriendRepository.getFriendRequests(userId);
-        
-        return requests.map(request => UserFriendHelper.generateFriendRequest(request, userId));
+
+        return requests.map(request => UserFriendHelper.generateUserFriend(request, userId));
     }
 }
 

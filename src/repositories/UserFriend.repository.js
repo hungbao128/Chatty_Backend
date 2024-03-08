@@ -57,7 +57,7 @@ class UserFriendRepository{
     }
 
     async getFriendRequests(userId){
-        return await UserFriendModel.find({recipient: userId, status: 'pending'}).populate('requester', '-password -createdAt -updatedAt -email -__v');
+        return await UserFriendModel.find({recipient: userId, status: 'pending'}).populate('requester', '-password -createdAt -updatedAt -email -__v');;
     }
 
     async removeFriend(friendId){
