@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "NODE_ENV=dev pm2 start src/app.js",
+    "dev": "pm2 start src/app.js",
     "prod": "NODE_ENV=production pm2 start src/app.js"
   },
   "keywords": [],

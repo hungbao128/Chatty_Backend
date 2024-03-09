@@ -6,7 +6,7 @@ const ConservationSchema = new Schema({
         default: ''
     },
 
-    iamge: {
+    image: {
         type: String,
         default: ''
     },

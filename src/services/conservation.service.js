@@ -1,4 +1,5 @@
 const conservationRepository = require("../repositories/Conservation.repository");
+const userRepository = require("../repositories/User.repository");
 const ServerErrorRequest = require("../core/ServerErrorRequest");
 const BadRequest = require("../core/BadRequest");
 const ConservationHelper = require("../helpers/ConservationHelper");
@@ -17,6 +18,9 @@ class ConservationService {
 
         if(existingConservation) return ConservationHelper.generateConservation((await this.conservationPopulate(existingConservation)), creatorId);
         
+        const existingUser = await userRepository.findUserById(userId);
+        if(!existingUser) throw new BadRequest('User not found.');
+        
         const conservation = await conservationRepository.create({creatorId, userId});
 
         if(!conservation) throw new ServerErrorRequest('Cannot create conservation.');
@@ -26,13 +30,8 @@ class ConservationService {
 
     async getUserConservations(userId){
         const conservations = await conservationRepository.findConservationsByUserId(userId);
-        
-        if(!conservations) throw new ServerErrorRequest('Cannot get user conservations.');
-
-        const result = await Promise.all(conservations.map(async conservation => {
-            return ConservationHelper.generateConservation((await this.conservationPopulate(conservation)), userId);
-        }));
-
+        const conservationsPopulate = await Promise.all(conservations.map(async conservation => await this.conservationPopulate(conservation)));
+        const result = conservationsPopulate.map(el => ConservationHelper.generateConservation(el, userId));
         return result;
     }
 }
