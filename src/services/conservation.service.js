@@ -11,7 +11,7 @@ class ConservationService {
     }
 
     async openConservation(creatorId, userId) {
-        // if(creatorId == userId) throw new BadRequest('Cannot open conservation with yourself.');
+        if(creatorId == userId) throw new BadRequest('Cannot open conservation with yourself.');
 
         const existingConservation = await conservationRepository.findPrivateConservationByMembers(creatorId, userId);
 

@@ -1,4 +1,4 @@
-const conservationService = require('./../services/conservationService.service');
+const conservationService = require('./../services/conservation.service');
 
 class ConservationController {
     async openConservation(req, res, next) {
