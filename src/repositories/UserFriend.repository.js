@@ -16,6 +16,16 @@ class UserFriendRepository{
         return count > 0;
     }
 
+    async isRelationshipExist(userId, friendId){
+        const count = await UserFriendModel.countDocuments({
+            $or: [
+                {requester: userId, recipient: friendId},
+                {requester: friendId, recipient: userId}
+            ]
+        });
+        return count > 0;
+    }
+
     async findUserRelationship(userId, friendId){
         return await UserFriendModel.findOne({
             $or: [

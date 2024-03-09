@@ -4,12 +4,11 @@ const UserFriendHelper = require("../helpers/UserFriendHelper");
 
 class UserFriendService{
     async requestAddFriend(userId, friendId){
-        console.log(`USER ID: ${userId} \t FRIEND ID: ${friendId}`);
         if(userId == friendId) throw new BadRequest('You can\'t send friend request to yourself.');
 
         if(await UserFriendRepository.isFriend(userId, friendId)) throw new BadRequest('You are already friends.');
 
-        if(await UserFriendRepository.isPendingRequest(userId, friendId)) throw new BadRequest('You already request add friend.');
+        if(await UserFriendRepository.isRelationshipExist(userId, friendId)) throw new BadRequest('You already have a relationship with this user.');
         
         return await UserFriendRepository.requestAddFriend(userId, friendId);
     }

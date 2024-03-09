@@ -5,6 +5,7 @@ const cors = require('cors');
 const {createServer} = require('http');
 const MongoDBConnection = require('./databases/mongodb.init');
 const { isProdction } = require('./envConfig');
+const { UserSocketHandler } = require('./sockets/user.socket');
 
 const SERVER_PORT = 8555;
 
@@ -79,7 +80,9 @@ class ApplicationServer {
   #startServer(app) {
     const httpServer = createServer(app);
     const io = this.#createSocketIoServer(httpServer);
+    const userSocket = new UserSocketHandler(io);
 
+    userSocket.listen();
     httpServer.listen(SERVER_PORT, () => {
       console.log("Server listening on port " + SERVER_PORT);
     });
