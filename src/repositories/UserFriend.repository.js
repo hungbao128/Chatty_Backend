@@ -40,7 +40,10 @@ class UserFriendRepository{
     }
 
     async isUserFriend(userId, friendId){
-        return await UserFriendModel.countDocuments({_id: friendId, recipient: userId, status: 'accepted'});
+        return await UserFriendModel.countDocuments({_id: friendId, $or: [
+            {recipient: userId},
+            {requester: userId}
+        ], status: 'accepted'});
     }
 
     async rejectFriendRequest(userId, friendId){
