@@ -32,6 +32,16 @@ class UserController{
         })
     }
 
+    async updateAvatarV2(req, res, next){
+        const {user} = req;
+        const {avatar} = req.body;
+        const result = await userService.updateAvatarV2(user._id, avatar);
+        return res.status(200).json({
+            message: 'Update avatar successfully.',
+            data: result
+        })
+    }
+
     async updateBackground(req, res, next){
         const {user} = req;
         const {file} = req;
