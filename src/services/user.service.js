@@ -78,6 +78,19 @@ class UserService {
         const html = forgetPasswordOTPTemplate(otp);
         await sendEmail(user.email, 'Forget password OTP', html);
     }
+
+    async verifyForgetPasswordOTP(email, otp){
+        const user = await UserRepository.findByEmail(email);
+
+        if(!user) throw new BadRequest('User not found');
+
+        const token = await ResetPasswordTokenRepository.findOne({userId: user._id, otp});
+
+        if(!token) throw new BadRequest('Invalid OTP');
+
+        await ResetPasswordTokenRepository.deleteMany({userId: user._id});
+        return true;
+    }
 }
 
 module.exports = new UserService();

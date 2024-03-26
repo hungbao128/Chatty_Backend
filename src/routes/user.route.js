@@ -16,5 +16,6 @@ router.put('/updateAvatarV2', catchAsync(authentication), catchAsync(userControl
 router.put('/updateBackground', catchAsync(authentication), uploadDisk.single('background'), catchAsync(userController.updateBackground));
 router.get('/:id', catchAsync(authentication), catchAsync(userController.findUserById));
 router.post('/forgetPassword', catchAsync(userController.sendForgetPasswordOTP));
+router.post('/verifyForgetPasswordOTP', catchAsync(userController.verifyForgetPasswordOTP));
 
 module.exports = router;

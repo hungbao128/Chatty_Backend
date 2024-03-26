@@ -8,6 +8,10 @@ class ForgetPasswordTokenRepository{
     async deleteMany({userId}){
         return await resetPasswordTokenModel.deleteMany({userId});
     }
+
+    async findOne({userId, otp}){
+        return await resetPasswordTokenModel.findOne({userId, otp});
+    }
 }
 
 module.exports = new ForgetPasswordTokenRepository();

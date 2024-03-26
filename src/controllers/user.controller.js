@@ -80,6 +80,16 @@ class UserController{
             message: 'Please check your email to get OTP.',
         });
     }
+
+    async verifyForgetPasswordOTP(req, res, next){
+        const {email, otp} = req.body;
+        await userService.verifyForgetPasswordOTP(email, otp);
+
+        return res.status(200).json({
+            status: 'success',
+            message: 'Verify OTP successfully.',
+        });
+    }
 }
 
 module.exports = new UserController();
