@@ -6,7 +6,7 @@ const sesClient = new SESClient({
     region: EnvConfig.AWS_REGION,
     credentials: {
       secretAccessKey: EnvConfig.AWS_ACCESS_SECRET_KEY,
-      accessKeyId: EnvConfig.AWS_ACCESS_KEY_ID1
+      accessKeyId: EnvConfig.AWS_ACCESS_KEY_ID
   }
 })
 
