@@ -13,7 +13,7 @@ class EnvConfig {
   AWS_ACCESS_SECRET_KEY;
   AWS_SES_FROM_ADDRESS;
 
-  isProdction() {
+  isProduction() {
     return process.env.NODE_ENV === "production";
   }
 

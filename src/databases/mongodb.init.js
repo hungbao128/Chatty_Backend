@@ -26,7 +26,7 @@ class MongoDBConnection {
         console.log("Error connecting to MongoDB", error);
       });
 
-      if(!EnvConfig.isProdction()){
+      if(!EnvConfig.isProduction()){
         mongoose.set('debug', true);
       }
   }

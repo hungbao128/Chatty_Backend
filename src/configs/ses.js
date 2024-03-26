@@ -1,3 +1,4 @@
+const ServerErrorRequest = require('../core/ServerErrorRequest');
 const EnvConfig = require('./../envConfig');
 const { SendEmailCommand, SESClient } = require('@aws-sdk/client-ses');
 
@@ -5,7 +6,7 @@ const sesClient = new SESClient({
     region: EnvConfig.AWS_REGION,
     credentials: {
       secretAccessKey: EnvConfig.AWS_ACCESS_SECRET_KEY,
-      accessKeyId: EnvConfig.AWS_ACCESS_KEY_ID
+      accessKeyId: EnvConfig.AWS_ACCESS_KEY_ID1
   }
 })
 
@@ -32,7 +33,7 @@ const sendEmail = async (to, subject, body) => {
     try{
         await sesClient.send(new SendEmailCommand(params));
     } catch (err){
-        console.log(err);
+        throw new ServerErrorRequest(err.message);
     }
 }
 

@@ -4,7 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const {createServer} = require('http');
 const MongoDBConnection = require('./databases/mongodb.init');
-const { isProdction } = require('./envConfig');
+const envConfig = require('./envConfig');
 const { UserSocketHandler } = require('./sockets/user.socket');
 
 const SERVER_PORT = 8555;
@@ -64,10 +64,10 @@ class ApplicationServer {
       let message = error.message || "Internal server error";
       let stack = error.stack;
 
-      // if(isProdction){
-      //   stack = undefined;
-      //   statusCode === 500 ? message = "Internal server error" : message;
-      // }
+      if(envConfig.isProduction()){
+        stack = undefined;
+        statusCode === 500 ? message = "Internal server error" : message;
+      }
       
       res.status(statusCode).json({
         status,
