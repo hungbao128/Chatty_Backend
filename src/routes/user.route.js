@@ -17,5 +17,6 @@ router.put('/updateBackground', catchAsync(authentication), uploadDisk.single('b
 router.get('/:id', catchAsync(authentication), catchAsync(userController.findUserById));
 router.post('/forgetPassword', catchAsync(userController.sendForgetPasswordOTP));
 router.post('/verifyForgetPasswordOTP', catchAsync(userController.verifyForgetPasswordOTP));
+router.post('/resetPassword', catchAsync(userController.resetPassword));
 
 module.exports = router;

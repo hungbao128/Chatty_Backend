@@ -90,6 +90,16 @@ class UserController{
             message: 'Verify OTP successfully.',
         });
     }
+
+    async resetPassword(req, res, next){
+        const {email, password} = req.body;
+        await userService.resetPassword(email, password);
+
+        return res.status(200).json({
+            status: 'success',
+            message: 'Reset password successfully.',
+        });
+    }
 }
 
 module.exports = new UserController();

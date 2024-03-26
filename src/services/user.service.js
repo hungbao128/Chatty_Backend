@@ -91,6 +91,17 @@ class UserService {
         await ResetPasswordTokenRepository.deleteMany({userId: user._id});
         return true;
     }
+
+    async resetPassword(email, password){
+        const user = await UserRepository.findByEmail(email);
+
+        if(!user) throw new BadRequest('User not found');
+
+        user.password = password;
+        await user.save();
+
+        return true;
+    }
 }
 
 module.exports = new UserService();
