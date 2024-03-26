@@ -64,10 +64,10 @@ class ApplicationServer {
       let message = error.message || "Internal server error";
       let stack = error.stack;
 
-      if(isProdction){
-        stack = undefined;
-        statusCode === 500 ? message = "Internal server error" : message;
-      }
+      // if(isProdction){
+      //   stack = undefined;
+      //   statusCode === 500 ? message = "Internal server error" : message;
+      // }
       
       res.status(statusCode).json({
         status,

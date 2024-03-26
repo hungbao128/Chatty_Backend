@@ -2,7 +2,11 @@ const UserRepository = require("../repositories/User.repository");
 const UserHelper= require('./../helpers/UserHelper');
 const cloudinary = require('./../configs/cloudinary');
 const BadRequest = require("../core/BadRequest");
+const { generateRandomNumber } = require('./../utils');
 const UserFriendRepository = require("../repositories/UserFriend.repository");
+const ResetPasswordTokenRepository = require("../repositories/ResetPasswordToken.repository");
+const { sendEmail } = require("../configs/ses");
+const forgetPasswordOTPTemplate = require("../templates/forgetPasswordOtp");
 
 class UserService {
     async findById(id){
@@ -58,6 +62,21 @@ class UserService {
         result.friend = userFriend;
 
         return result;
+    }
+
+    async sendForgetPasswordOTP(email){
+        const user = await UserRepository.findByEmail(email);
+
+        if(!user) throw new BadRequest('User not found');
+
+        const otp = generateRandomNumber();
+
+        await ResetPasswordTokenRepository.deleteMany({userId: user._id});
+        await ResetPasswordTokenRepository.create({userId: user._id, otp});
+
+        // send mail
+        const html = forgetPasswordOTPTemplate(otp);
+        await sendEmail(user.email, 'Forget password OTP', html);
     }
 }
 

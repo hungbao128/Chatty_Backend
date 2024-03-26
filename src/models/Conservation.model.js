@@ -32,6 +32,12 @@ const ConservationSchema = new Schema({
         ref: 'Message',
         default: null
     },
+
+    readStatus: {
+        type: Map,
+        of: Boolean,
+        default: {}
+    }
 });
 
 

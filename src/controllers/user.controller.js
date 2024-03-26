@@ -70,6 +70,16 @@ class UserController{
             data: await userService.findUserById(req.user._id, req.params.id)
         });
     }
+
+    async sendForgetPasswordOTP(req, res, next){
+        const {email} = req.body;
+        await userService.sendForgetPasswordOTP(email);
+
+        return res.status(200).json({
+            status: 'success',
+            message: 'Please check your email to get OTP.',
+        });
+    }
 }
 
 module.exports = new UserController();

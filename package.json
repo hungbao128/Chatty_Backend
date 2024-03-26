@@ -4,13 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "pm2 start src/app.js",
+    "dev": "nodemon src/app.js",
     "prod": "NODE_ENV=production pm2 start src/app.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-ses": "^3.540.0",
+    "aws-sdk": "^2.1585.0",
     "bcrypt": "^5.1.1",
     "cloudinary": "^2.0.0",
     "cors": "^2.8.5",

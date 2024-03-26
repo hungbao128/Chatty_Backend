@@ -25,11 +25,6 @@ const MessageSchema = new Schema({
     },
 
     attactments: [],
-
-    seenBy: [{
-        type: Schema.Types.ObjectId,
-        ref: "User"
-    }],
 });
 
 
