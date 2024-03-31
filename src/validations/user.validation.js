@@ -18,6 +18,12 @@ const updateUserValidation = Joi.object({
 })
 
 const resetPasswordValidation = Joi.object({
+    email: Joi.string().email().required().messages({
+        "string.empty": "Please provide your email address.",
+        "string.email": "Please provide a valid email address.",
+        "any.required": "Please provide your email address."
+    }),
+    
     password: Joi.string().min(6).required().messages({
         "string.empty": "Please provide your password.",
         "string.min": "Password should have a minimum length of 6",
