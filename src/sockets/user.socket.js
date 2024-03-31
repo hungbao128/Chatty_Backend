@@ -8,15 +8,39 @@ class UserSocketHandler {
     
     listen(){
         this.io.on('connection', (socket) => {
-            console.log('a user connected');
             socket.on('disconnect', () => {
-                console.log('user disconnected');
+                this.removeSocketId(socket);
+                console.table(CONNECTED_USERS);
             });
 
             socket.on('user_connected', (data) => {
-                console.log('user connected', data);
-                CONNECTED_USERS.set(data.userId, socket.id);
+                this.addSocketId(data.userId, socket.id);
+                console.table(CONNECTED_USERS);
             });
+        });
+    }
+
+    addSocketId(userId, socketId) {
+        if (CONNECTED_USERS.has(userId)) {
+            const sockets = CONNECTED_USERS.get(userId);
+            sockets.push(socketId);
+            CONNECTED_USERS.set(userId, sockets);
+        } else {
+            CONNECTED_USERS.set(userId, [socketId]);
+        }
+    }
+
+    removeSocketId(socket) {
+        CONNECTED_USERS.forEach((sockets, userId) => {
+            const index = sockets.indexOf(socket.id);
+            if (index !== -1) {
+                sockets.splice(index, 1);
+                if (sockets.length === 0) {
+                    CONNECTED_USERS.delete(userId);
+                } else {
+                    CONNECTED_USERS.set(userId, sockets);
+                }
+            }
         });
     }
 }
