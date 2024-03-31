@@ -17,6 +17,15 @@ const updateUserValidation = Joi.object({
     })
 })
 
+const resetPasswordValidation = Joi.object({
+    password: Joi.string().min(6).required().messages({
+        "string.empty": "Please provide your password.",
+        "string.min": "Password should have a minimum length of 6",
+        "any.required": "Please provide your password."
+    }),
+})
+
 module.exports = {
-    updateUserValidation
+    updateUserValidation,
+    resetPasswordValidation
 }

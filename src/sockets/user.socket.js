@@ -12,6 +12,11 @@ class UserSocketHandler {
             socket.on('disconnect', () => {
                 console.log('user disconnected');
             });
+
+            socket.on('user_connected', (data) => {
+                console.log('user connected', data);
+                CONNECTED_USERS.set(data.userId, socket.id);
+            });
         });
     }
 }

@@ -3,7 +3,7 @@ const catchAsync = require('../utils/catchAsync');
 const authentication = require('../middlewares/authentication.middleware');
 const validate = require('../middlewares/validation.middleware');
 const userController = require('./../controllers/user.controller');
-const { updateUserValidation } = require('../validations/user.validation');
+const { updateUserValidation, resetPasswordValidation } = require('../validations/user.validation');
 const { uploadDisk } = require('../configs/multer');
 
 const router = express.Router();
@@ -17,6 +17,6 @@ router.put('/updateBackground', catchAsync(authentication), uploadDisk.single('b
 router.get('/:id', catchAsync(authentication), catchAsync(userController.findUserById));
 router.post('/forgetPassword', catchAsync(userController.sendForgetPasswordOTP));
 router.post('/verifyForgetPasswordOTP', catchAsync(userController.verifyForgetPasswordOTP));
-router.post('/resetPassword', catchAsync(userController.resetPassword));
+router.post('/resetPassword', catchAsync(validate(resetPasswordValidation)), catchAsync(userController.resetPassword));
 
 module.exports = router;
