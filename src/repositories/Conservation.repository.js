@@ -1,4 +1,5 @@
 const ConservationModel = require("../models/Conservation.model");
+const { ObjectId } = require("mongoose").Types;
 require("../models/Message.model");
 
 class ConservationRepository {
@@ -23,6 +24,11 @@ class ConservationRepository {
 
     async findConservationsByUserId(userId){
         return await ConservationModel.find({members: {$in: [userId]}}).sort({updatedAt: -1});
+    }
+
+    async isUserInConservation(conservationId, userId){
+        console.log(conservationId, userId);
+        return await ConservationModel.findOne({_id: new ObjectId(conservationId), members: {$in: [userId]}});
     }
 }
 
