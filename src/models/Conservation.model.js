@@ -38,6 +38,7 @@ const ConservationSchema = new Schema({
         of: Boolean,
         default: {}
     }
+    
 }, {timestamps: true});
 
 

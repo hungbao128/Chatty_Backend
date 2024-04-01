@@ -15,8 +15,8 @@ class ConservationService {
         if(creatorId == userId) throw new BadRequest('Cannot open conservation with yourself.');
 
         const existingConservation = await conservationRepository.findPrivateConservationByMembers(creatorId, userId);
-
-        if(existingConservation) return ConservationHelper.generateConservation((await this.conservationPopulate(existingConservation)), creatorId);
+        
+        if(existingConservation) return ConservationHelper.generateConservation(existingConservation, creatorId);
         
         const existingUser = await userRepository.findUserById(userId);
         if(!existingUser) throw new BadRequest('User not found.');
@@ -30,8 +30,7 @@ class ConservationService {
 
     async getUserConservations(userId){
         const conservations = await conservationRepository.findConservationsByUserId(userId);
-        const conservationsPopulate = await Promise.all(conservations.map(async conservation => await this.conservationPopulate(conservation)));
-        const result = conservationsPopulate.map(el => ConservationHelper.generateConservation(el, userId));
+        const result = conservations.map(el => ConservationHelper.generateConservation(el, userId));
         return result;
     }
 }
