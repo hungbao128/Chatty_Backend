@@ -26,6 +26,10 @@ class ConservationRepository {
         return await ConservationModel.find({members: {$in: [userId]}}).sort({updatedAt: -1});
     }
 
+    async updateConservation(conservationId, data){
+        return await ConservationModel.updateOne({_id: new ObjectId(conservationId)}, data);
+    }
+
     async isUserInConservation(conservationId, userId){
         console.log(conservationId, userId);
         return await ConservationModel.findOne({_id: new ObjectId(conservationId), members: {$in: [userId]}});

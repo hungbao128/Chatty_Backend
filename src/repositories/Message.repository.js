@@ -7,6 +7,10 @@ class MessageRepository {
                 .skip((page - 1) * limit)
                 .limit(limit);
     }
+
+    async createMessage({userId, conservationId, content}) {
+        return MessageModel.create({sender: userId, conservation: conservationId, content, type: "text"});
+    }
 }
 
 module.exports = new MessageRepository();

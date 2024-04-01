@@ -25,7 +25,7 @@ const MessageSchema = new Schema({
     },
 
     attactments: [],
-});
+}, {timestamps: true});
 
 
 const MessageModel = model("Message", MessageSchema);

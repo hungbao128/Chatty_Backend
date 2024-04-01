@@ -38,7 +38,7 @@ const ConservationSchema = new Schema({
         of: Boolean,
         default: {}
     }
-});
+}, {timestamps: true});
 
 
 const ConservationModel = model("Conservation", ConservationSchema);

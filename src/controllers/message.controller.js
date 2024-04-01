@@ -23,6 +23,7 @@ class MessageController {
 
         return res.status(201).json({
             message: "Message sent successfully",
+            data: message
         });
     }
 }
