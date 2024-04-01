@@ -16,7 +16,9 @@ class MessageService {
 
         const messages = await MessageRepository.getMessages({conservationId, page, limit});
 
-        return messages;
+        const result = messages.map(message => MessageHelper.generateMessage(message, userId));
+
+        return result;
     }
 
     async sendMessage({userId, conservationId, content}) {
