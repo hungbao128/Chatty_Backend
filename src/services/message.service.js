@@ -8,7 +8,14 @@ class MessageService {
     return await message.populate(
       "sender",
       "-password -createdAt -updatedAt -email -bio -dateOfBirth -gender -phone -__v"
-    );
+    ).then(result => result.populate({
+      path: "parent",
+      select: "-conservation -__v",
+      populate: {
+        path: 'sender',
+        select: '-password -createdAt -updatedAt -email -bio -dateOfBirth -gender -phone -__v'
+      }
+    }));
   }
 
   async getMessages({ userId, conservationId, page = 1, limit = 50 }) {
