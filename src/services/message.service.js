@@ -35,12 +35,8 @@ class MessageService {
   }
 
   async sendMessage({ userId, conservationId, content }) {
-    if (
-      (await ConservationRepository.isUserInConservation(
-        conservationId,
-        userId
-      )) === null
-    ) {
+    const conversation = await ConservationRepository.isUserInConservation(conservationId, userId);
+    if (conversation === null) {
       throw new BadRequest("You are not in this conservation");
     }
 
@@ -49,9 +45,18 @@ class MessageService {
       conservationId,
       content,
     });
-    await ConservationRepository.updateConservation(conservationId, {
-      lastMessage: message._id,
-    });
+
+    conversation.lastMessage = message._id;
+    const members = conversation.members;
+
+    const updatePromises = members.map(async (memberId) => {
+      return await ConservationRepository.updateConservation(conservationId, {
+        [`readStatus.${memberId}`]: (userId.toString() === memberId.toString() ? true : false),
+      });
+    })
+
+    await Promise.all(updatePromises);
+    
     return MessageHelper.generateMessage(
       await this.populateMessage(message),
       userId
