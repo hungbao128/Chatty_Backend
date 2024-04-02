@@ -49,7 +49,7 @@ class ConservationRepository {
   }
 
   async updateConservation(conservationId, data) {
-    return await ConservationModel.updateOne(
+    return await ConservationModel.findOneAndUpdate(
       { _id: new ObjectId(conservationId) },
       data
     );

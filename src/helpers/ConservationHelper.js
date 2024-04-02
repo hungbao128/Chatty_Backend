@@ -1,6 +1,8 @@
 
 class ConservationHelper {
     static generateConservation(conservation, userId) {
+        // console.log(conservation?.constructor?.name === 'model')
+        // conservation = (conservation?.constructor?.name === 'model') ? conservation.toObject() : conservation;
         conservation = conservation.toObject();
         if(conservation.type === 'private') {
             const result = conservation.members.filter(member => member._id.toString() != userId);

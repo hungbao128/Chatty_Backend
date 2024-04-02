@@ -33,13 +33,9 @@ class ConservationService {
       );
 
     if (existingConservation) {
-      // await conservationRepository.updateConservation(existingConservation._id, {
-      //   [`readStatus.${userId}`]: true
-      // });
-      
-      existingConservation.readStatus.set(userId, true);
+      existingConservation.readStatus.set(creatorId, true);
       await existingConservation.save();
-      console.log(existingConservation);
+
       return ConservationHelper.generateConservation(
         existingConservation,
         creatorId
