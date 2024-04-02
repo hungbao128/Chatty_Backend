@@ -37,6 +37,7 @@ class AuthenticationController {
         const result = await AuthenticationService.changePassword({userId: user._id, oldPassword, newPassword});
 
         return res.status(200).json({
+            status: "success",
             message: 'Change password successfully.',
             data: result
         });

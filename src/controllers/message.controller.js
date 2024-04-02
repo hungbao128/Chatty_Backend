@@ -14,6 +14,7 @@ class MessageController {
     });
 
     return res.status(200).json({
+      status: "success",
       message: "Messages fetched successfully",
       data: messages,
     });
@@ -31,6 +32,7 @@ class MessageController {
     });
 
     return res.status(201).json({
+      status: "success",
       message: "Message sent successfully",
       data: message,
     });
@@ -44,8 +46,21 @@ class MessageController {
     const { content } = req.body;
 
     return res.status(201).json({
+      status: "success",
       message: "Message sent successfully",
       data: "On working progress",
+    });
+  }
+
+  async deleteMessage(req, res, next) {
+    const { id } = req.params;
+    const { _id: userId } = req.user;
+
+    await messageService.deleteMessage({ userId, messageId: id });
+
+    return res.status(200).json({
+      status: "success",
+      message: "Message deleted successfully",
     });
   }
 }

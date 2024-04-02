@@ -63,6 +63,22 @@ class MessageService {
     );
   }
 
+  async deleteMessage({ userId, messageId }) {
+    const message = await MessageRepository.getMessageById(messageId);
+
+    if (message === null) {
+      throw new BadRequest("Message not found");
+    }
+
+    if (message.sender.toString() !== userId.toString()) {
+      throw new BadRequest("You can only delete your message");
+    }
+
+    await MessageRepository.deleteMessage(messageId);
+
+    return true;
+  }
+
   async sendFileMessage({ userId, conservationId, files, content }) {
     if (
       (await ConservationRepository.isUserInConservation(

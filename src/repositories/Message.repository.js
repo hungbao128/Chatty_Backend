@@ -12,6 +12,14 @@ class MessageRepository {
     async createMessage({userId, conservationId, content}) {
         return MessageModel.create({sender: userId, conservation: conservationId, content, type: "text"});
     }
+
+    async getMessageById(messageId){
+        return await MessageModel.findById(messageId);
+    }
+
+    async deleteMessage(messageId){
+        return await MessageModel.findByIdAndUpdate(messageId, {isDelete: true}, {new: true});
+    }
 }
 
 module.exports = new MessageRepository();

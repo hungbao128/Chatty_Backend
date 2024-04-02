@@ -19,6 +19,17 @@ const MessageSchema = new Schema(
       default: "",
     },
 
+    parent: {
+      type: Schema.Types.ObjectId,
+      ref: "Message",
+      default: null
+    },
+
+    isDelete: {
+      type: Boolean,
+      default: false,
+    },
+
     type: {
       type: String,
       enum: ["text", "image", "file", "video"],

@@ -6,6 +6,7 @@ class UserFriendController{
         const {id} = req.params;
         await userFriendService.requestAddFriend(user._id, id);
         return res.status(200).json({
+            status: "success",
             message: "Friend request sent successfully!"
         });
     }
@@ -16,6 +17,7 @@ class UserFriendController{
         await userFriendService.acceptFriendRequest(user._id, id);
 
         return res.status(200).json({
+            status: "success",
             message: "Friend request accepted successfully!"
         });
     }
@@ -26,6 +28,7 @@ class UserFriendController{
         await userFriendService.rejectFriendRequest(user._id, id);
 
         return res.status(200).json({
+            status: "success",
             message: "Friend request rejected successfully!"
         });
     }
@@ -36,6 +39,7 @@ class UserFriendController{
         await userFriendService.cancelFriendRequest(user._id, id);
 
         return res.status(200).json({
+            status: "success",
             message: "Friend request canceled successfully!"
         });
     }
@@ -46,6 +50,7 @@ class UserFriendController{
         const result = await userFriendService.getCurrentUserFriends(user._id);
 
         return res.status(200).json({
+            status: "success",
             message: "Get current user friends successfully!",
             data: result
         });
@@ -57,6 +62,7 @@ class UserFriendController{
         const result = await userFriendService.getFriendRequests(user._id);
 
         return res.status(200).json({
+            status: "success",
             message: "Get friend requests successfully!",
             data: result
         });
@@ -68,6 +74,7 @@ class UserFriendController{
         await userFriendService.removeFriend(user._id, id);
 
         return res.status(200).json({
+            status: "success",
             message: "Remove friend successfully!"
         });
     }

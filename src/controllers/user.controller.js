@@ -7,6 +7,7 @@ class UserController{
         const result = await userService.updateUser(req.user._id, {name, dateOfBirth, gender});
 
         return res.status(200).json({
+            status: "success",
             message: 'Update user successfully.',
             data: result
         });
@@ -16,6 +17,7 @@ class UserController{
         const {user} = req;
 
         return res.status(200).json({
+            status: "success",
             message: 'Get user successfully.',
             data: user
         });
@@ -27,6 +29,7 @@ class UserController{
 
         const result = await userService.updateAvatar(user._id, file);
         return res.status(200).json({
+            status: "success",
             message: 'Update avatar successfully.',
             data: result
         })
@@ -37,6 +40,7 @@ class UserController{
         const {avatar} = req.body;
         const result = await userService.updateAvatarV2(user._id, avatar);
         return res.status(200).json({
+            status: "success",
             message: 'Update avatar successfully.',
             data: result
         })
@@ -48,6 +52,7 @@ class UserController{
 
         const result = await userService.updateBackground(user._id, file);
         return res.status(200).json({
+            status: "success",
             message: 'Update background successfully.',
             data: result
         })
@@ -59,6 +64,7 @@ class UserController{
         const result = await userService.findByPhone(phone, req.user._id);
 
         return res.status(200).json({
+            status: "success",
             message: 'Find user by phone successfully.',
             data: result
         });
@@ -66,6 +72,7 @@ class UserController{
 
     async findUserById(req, res, next){
         return res.status(200).json({
+            status: "success",
             message: 'Find user successfully.',
             data: await userService.findUserById(req.user._id, req.params.id)
         });
