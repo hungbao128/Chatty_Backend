@@ -51,12 +51,13 @@ class MessageService {
 
     const updatePromises = members.map(async (memberId) => {
       return await ConservationRepository.updateConservation(conservationId, {
+        lastMessage: message._id,
         [`readStatus.${memberId}`]: (userId.toString() === memberId.toString() ? true : false),
       });
     })
 
     await Promise.all(updatePromises);
-    
+
     return MessageHelper.generateMessage(
       await this.populateMessage(message),
       userId
