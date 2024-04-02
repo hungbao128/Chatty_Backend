@@ -1,32 +1,34 @@
 const { Schema, model } = require("mongoose");
 
-const MessageSchema = new Schema({
+const MessageSchema = new Schema(
+  {
     sender: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-        required: true
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
 
     conservation: {
-        type: Schema.Types.ObjectId,
-        ref: "Conservation",
-        required: true
+      type: Schema.Types.ObjectId,
+      ref: "Conservation",
+      required: true,
     },
 
     content: {
-        type: String,
-        default: ""
+      type: String,
+      default: "",
     },
 
     type: {
-        type: String,
-        enum: ["text", "image", "file", "video"],
-        default: "text"
+      type: String,
+      enum: ["text", "image", "file", "video"],
+      default: "text",
     },
 
-    attactments: [],
-}, {timestamps: true});
-
+    attachments: [],
+  },
+  { timestamps: true }
+);
 
 const MessageModel = model("Message", MessageSchema);
 
