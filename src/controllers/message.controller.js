@@ -74,6 +74,7 @@ class MessageController {
       userId,
       conservationId: id,
       content,
+      parentId
     });
 
     return res.status(201).json({
