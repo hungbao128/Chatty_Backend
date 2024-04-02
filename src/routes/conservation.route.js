@@ -38,5 +38,10 @@ router.post(
   uploadDisk.array("files"),
   catchAsync(messageController.sendFileMessage)
 );
+router.post(
+  "/:id/messages/replyText/:messageId",
+  catchAsync(authentication),
+  catchAsync(messageController.replyMessage)
+);
 
 module.exports = router;

@@ -63,6 +63,41 @@ class MessageService {
     );
   }
 
+  async replyMessage({ userId, conservationId, content, parentId }) {
+    const conversation = await ConservationRepository.isUserInConservation(conservationId, userId);
+    if (conversation === null) {
+      throw new BadRequest("You are not in this conservation");
+    }
+
+    const parentMessage = await MessageRepository.getMessageById(parentId);
+    if (parentMessage === null) {
+      throw new BadRequest("Parent message not found");
+    }
+
+    const message = await MessageRepository.createMessage({
+      userId,
+      conservationId,
+      content,
+      parentId,
+    });
+
+    const members = conversation.members;
+
+    const updatePromises = members.map(async (memberId) => {
+      return await ConservationRepository.updateConservation(conservationId, {
+        lastMessage: message._id,
+        [`readStatus.${memberId}`]: (userId.toString() === memberId.toString() ? true : false),
+      });
+    })
+
+    await Promise.all(updatePromises);
+
+    return MessageHelper.generateMessage(
+      await this.populateMessage(message),
+      userId
+    );
+  }
+
   async deleteMessage({ userId, messageId }) {
     const message = await MessageRepository.getMessageById(messageId);
 

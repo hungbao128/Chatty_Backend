@@ -9,8 +9,8 @@ class MessageRepository {
                 .limit(limit);
     }
 
-    async createMessage({userId, conservationId, content}) {
-        return MessageModel.create({sender: userId, conservation: conservationId, content, type: "text"});
+    async createMessage({userId, conservationId, content, parentId = null, type = "text"}) {
+        return MessageModel.create({sender: userId, conservation: conservationId, content, type, parent: parentId});
     }
 
     async getMessageById(messageId){
