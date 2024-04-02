@@ -4,32 +4,86 @@ const ConservationRepository = require("../repositories/Conservation.repository"
 const MessageRepository = require("../repositories/Message.repository");
 
 class MessageService {
-    async populateMessage(message) {
-        return await message.populate("sender", "-password -createdAt -updatedAt -email -bio -dateOfBirth -gender -phone -__v");
-        
+  async populateMessage(message) {
+    return await message.populate(
+      "sender",
+      "-password -createdAt -updatedAt -email -bio -dateOfBirth -gender -phone -__v"
+    );
+  }
+
+  async getMessages({ userId, conservationId, page = 1, limit = 50 }) {
+    if (
+      (await ConservationRepository.isUserInConservation(
+        conservationId,
+        userId
+      )) === null
+    ) {
+      throw new BadRequest("You are not in this conservation");
     }
 
-    async getMessages({userId, conservationId, page = 1, limit = 50}) {
-        if(await ConservationRepository.isUserInConservation(conservationId, userId) === null){
-            throw new BadRequest("You are not in this conservation");
-        }
+    const messages = await MessageRepository.getMessages({
+      conservationId,
+      page,
+      limit,
+    });
 
-        const messages = await MessageRepository.getMessages({conservationId, page, limit});
+    const result = messages.map((message) =>
+      MessageHelper.generateMessage(message, userId)
+    );
 
-        const result = messages.map(message => MessageHelper.generateMessage(message, userId));
+    return result;
+  }
 
-        return result;
+  async sendMessage({ userId, conservationId, content }) {
+    if (
+      (await ConservationRepository.isUserInConservation(
+        conservationId,
+        userId
+      )) === null
+    ) {
+      throw new BadRequest("You are not in this conservation");
     }
 
-    async sendMessage({userId, conservationId, content}) {
-        if(await ConservationRepository.isUserInConservation(conservationId, userId) === null){
-            throw new BadRequest("You are not in this conservation");
-        }
+    const message = await MessageRepository.createMessage({
+      userId,
+      conservationId,
+      content,
+    });
+    await ConservationRepository.updateConservation(conservationId, {
+      lastMessage: message._id,
+    });
+    return MessageHelper.generateMessage(
+      await this.populateMessage(message),
+      userId
+    );
+  }
 
-        const message = await MessageRepository.createMessage({userId, conservationId, content});
-        await ConservationRepository.updateConservation(conservationId, {lastMessage: message._id});
-        return MessageHelper.generateMessage((await this.populateMessage(message)), userId);
+  async sendFileMessage({ userId, conservationId, files, content }) {
+    if (
+      (await ConservationRepository.isUserInConservation(
+        conservationId,
+        userId
+      )) === null
+    ) {
+      throw new BadRequest("You are not in this conservation");
     }
+
+    // const message = await MessageRepository.createFileMessage({
+    //   userId,
+    //   conservationId,
+    //   files,
+    //   content,
+    // });
+
+    // await ConservationRepository.updateConservation(conservationId, {
+    //   lastMessage: message._id,
+    // });
+
+    // return MessageHelper.generateMessage(
+    //   await this.populateMessage(message),
+    //   userId
+    // );
+  }
 }
 
 module.exports = new MessageService();
