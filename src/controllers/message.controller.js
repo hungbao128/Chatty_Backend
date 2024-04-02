@@ -67,13 +67,13 @@ class MessageController {
   async replyMessage(req, res, next) {
     const { id } = req.params;
     const { _id: userId } = req.user;
-    const { content, parentId } = req.body;
+    const { messageId: parentId } = req.params;
+    const { content } = req.body;
 
     const message = await messageService.replyMessage({
       userId,
       conservationId: id,
       content,
-      parentId,
     });
 
     return res.status(201).json({
