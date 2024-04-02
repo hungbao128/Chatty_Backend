@@ -32,12 +32,19 @@ class ConservationService {
         userId
       );
 
-    if (existingConservation)
+    if (existingConservation) {
+      // await conservationRepository.updateConservation(existingConservation._id, {
+      //   [`readStatus.${userId}`]: true
+      // });
+      
+      existingConservation.readStatus[userId] = true;
+      await existingConservation.save();
+      
       return ConservationHelper.generateConservation(
         existingConservation,
         creatorId
       );
-
+    }
     const existingUser = await userRepository.findUserById(userId);
     if (!existingUser) throw new BadRequest("User not found.");
 
