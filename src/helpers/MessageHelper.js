@@ -16,7 +16,6 @@ class MessageHelper {
       message.parent = MessageHelper.generateMessage(message.parent, userId);
     }
 
-    delete message.isDelete;
     delete message.sender;
     delete message.conservation;
     delete message.__v;
