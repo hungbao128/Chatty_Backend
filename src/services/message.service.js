@@ -46,7 +46,6 @@ class MessageService {
       content,
     });
 
-    conversation.lastMessage = message._id;
     const members = conversation.members;
 
     const updatePromises = members.map(async (memberId) => {
