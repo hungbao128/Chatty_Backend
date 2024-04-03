@@ -66,6 +66,21 @@ class ConservationService {
     );
     return result;
   }
+
+  async findConservationById({conservationId, userId}) {
+    const conservation = await conservationRepository.findConservationById(conservationId);
+    if (!conservation) throw new BadRequest("Conservation not found.");
+
+    let isUserInConservation = false;
+    conservation.members.forEach(member => {
+      console.log(member._id.toString(), userId.toString());
+      if (member._id.toString() === userId.toString()) isUserInConservation = true;
+    })
+
+    if(!isUserInConservation) throw new BadRequest("You are not in this conservation.");
+    
+    return ConservationHelper.generateConservation(conservation, userId);
+  }
 }
 
 module.exports = new ConservationService();

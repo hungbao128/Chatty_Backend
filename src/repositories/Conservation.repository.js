@@ -15,6 +15,19 @@ class ConservationRepository {
     });
   }
 
+  async findConservationById(conservationId) {
+    return await ConservationModel.findById(conservationId)
+    .populate(
+      "members",
+      "-password -createdAt -updatedAt -email -bio -dateOfBirth -gender -phone -__v"
+    )
+    .populate(
+      "creator",
+      "-password -createdAt -updatedAt -bio -dateOfBirth -gender -phone -email -__v"
+    )
+    .populate("lastMessage", "-seenBy -createdAt -conservation -__v");
+  }
+
   async findPrivateConservationByMembers(creatorId, userId) {
     return await ConservationModel.findOne({
       type: "private",

@@ -22,6 +22,11 @@ router.get(
   catchAsync(conservationController.getUserConservations)
 );
 router.get(
+  "/:id",
+  catchAsync(authentication),
+  catchAsync(conservationController.findConservationById)
+);
+router.get(
   "/:id/messages",
   catchAsync(authentication),
   catchAsync(messageController.getMessages)

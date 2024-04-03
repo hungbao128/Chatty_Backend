@@ -23,6 +23,18 @@ class ConservationController {
             data: result
         });
     }
+
+    async findConservationById(req, res, next){
+        const {_id} = req.user;
+        const {id} = req.params;
+        const result = await conservationService.findConservationById({conservationId: id, userId: _id});
+
+        return res.status(200).json({
+            status: "success",
+            message: 'Get conservation successfully.',
+            data: result
+        });
+    }
 }
 
 module.exports = new ConservationController();
