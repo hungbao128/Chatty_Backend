@@ -28,6 +28,10 @@ class MessageRepository {
     async deleteMessage(messageId){
         return await MessageModel.findByIdAndUpdate(messageId, {isDelete: true}, {new: true});
     }
+
+    async createFileMessage({userId, conservationId, files, content, parentId = null, type = "file"}){
+        return MessageModel.create({sender: userId, conservation: conservationId, content, attachments: files, type, parent: parentId});
+    }
 }
 
 module.exports = new MessageRepository();

@@ -42,13 +42,13 @@ class MessageController {
     const { id } = req.params;
     const { _id: userId } = req.user;
     const files = req.files;
-    console.log(files);
     const { content } = req.body;
 
+    const messsage = await messageService.sendFileMessage({userId, conservationId: id, files, content});
     return res.status(201).json({
       status: "success",
       message: "Message sent successfully",
-      data: "On working progress",
+      data: messsage,
     });
   }
 

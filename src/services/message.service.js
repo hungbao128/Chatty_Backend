@@ -1,4 +1,5 @@
 const BadRequest = require("../core/BadRequest");
+const cloudinary = require('./../configs/cloudinary');
 const MessageHelper = require("../helpers/MessageHelper");
 const ConservationRepository = require("../repositories/Conservation.repository");
 const MessageRepository = require("../repositories/Message.repository");
@@ -121,22 +122,53 @@ class MessageService {
     return true;
   }
 
-  async sendFileMessage({ userId, conservationId, files, content }) {
-    if (
-      (await ConservationRepository.isUserInConservation(
-        conservationId,
-        userId
-      )) === null
-    ) {
+  async sendFileMessage({ userId, conservationId, files, content = '' }) {
+    const conversation = await ConservationRepository.isUserInConservation(conservationId, userId);
+    if (conversation === null) {
       throw new BadRequest("You are not in this conservation");
     }
 
-    // const message = await MessageRepository.createFileMessage({
-    //   userId,
-    //   conservationId,
-    //   files,
-    //   content,
-    // });
+    const fileTypes = files.map((file) => file.mimetype.split('/')[0]);
+
+    const filePromises = files.map(async (file) => {
+      return await cloudinary.uploader.upload(file.path, {
+        folder: "chat-app",
+        resource_type: "auto",
+      })
+    });
+
+    const results = await Promise.all(filePromises);
+
+    const filesResult = results.map((result, index) => {
+      return {
+        url: result.secure_url,
+        type: fileTypes[index],
+      };
+    });
+
+    const message = await MessageRepository.createFileMessage({
+      userId,
+      conservationId,
+      files: filesResult,
+      content,
+    });
+
+    const members = conversation.members;
+
+    const updatePromises = members.map(async (memberId) => {
+      return await ConservationRepository.updateConservation(conservationId, {
+        lastMessage: message._id,
+        [`readStatus.${memberId}`]: (userId.toString() === memberId.toString() ? true : false),
+      });
+    })
+
+    await Promise.all(updatePromises);
+
+    return MessageHelper.generateMessage(
+      await this.populateMessage(message),
+      userId
+    );
+    
 
     // await ConservationRepository.updateConservation(conservationId, {
     //   lastMessage: message._id,
