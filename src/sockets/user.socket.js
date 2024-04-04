@@ -15,6 +15,7 @@ class UserSocketHandler {
             });
 
             socket.on('user_connected', (data) => {
+                console.log(`User connected with userId: ${data.userId}`);
                 this.addSocketId(data.userId, socket.id);
                 console.table(CONNECTED_USERS);
             });
