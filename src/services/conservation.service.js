@@ -73,7 +73,7 @@ class ConservationService {
 
     let isUserInConservation = false;
     conservation.members.forEach(member => {
-      console.log(member._id.toString(), userId.toString());
+      // console.log(member._id.toString(), userId.toString());
       if (member._id.toString() === userId.toString()) isUserInConservation = true;
     })
 
