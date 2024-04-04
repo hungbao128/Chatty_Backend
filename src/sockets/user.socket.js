@@ -8,6 +8,7 @@ class UserSocketHandler {
     
     listen(){
         this.io.on('connection', (socket) => {
+            console.log('User connected to socket server ', socket.id);
             socket.on('disconnect', () => {
                 this.removeSocketId(socket);
                 console.table(CONNECTED_USERS);
