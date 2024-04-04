@@ -10,7 +10,7 @@ class UserSocketHandler {
         this.io.on('connection', (socket) => {
             console.log(`User connected (${socket.id}) to socket server at ${new Date()}`);
             socket.on('disconnect', () => {
-                console.log(`User connected (${socket.id}) to socket server at ${new Date()}`);
+                console.log(`User disconnected (${socket.id}) to socket server at ${new Date()}`);
                 this.removeSocketId(socket);
                 console.table(CONNECTED_USERS);
             });
