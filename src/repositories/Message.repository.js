@@ -13,8 +13,8 @@ class MessageRepository {
                     }
                 })
                 .sort({createdAt: -1})
-                .skip((page - 1) * limit)
-                .limit(limit);
+                // .skip((page - 1) * limit)
+                // .limit(limit);
     }
 
     async createMessage({userId, conservationId, content, parentId = null, type = "text"}) {
