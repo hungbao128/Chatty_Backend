@@ -1,3 +1,5 @@
+const CONVERSATIONS = new Map();
+
 class ConservationSocketHandler {
   constructor(io) {
     this.io = io;
@@ -5,9 +7,13 @@ class ConservationSocketHandler {
 
   listen() {
     this.io.on("connection", (socket) => {
-      socket.on("message:send", (data) => {});
+      socket.on("message:send", (data) => {
+        console.log('SEND MESSAGE', data);
+      });
 
-      socket.on("conversation:join", (data) => {});
+      socket.on("conversation:join", (data) => {
+        
+      });
     });
   }
 }
