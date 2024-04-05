@@ -44,6 +44,11 @@ router.post(
   catchAsync(messageController.sendFileMessage)
 );
 router.post(
+  "/:id/messages/sendFilesV2",
+  catchAsync(authentication),
+  catchAsync(messageController.sendFileMessageV2)
+);
+router.post(
   "/:id/messages/replyText/:messageId",
   catchAsync(authentication),
   catchAsync(messageController.replyMessage)

@@ -44,7 +44,30 @@ class MessageController {
     const files = req.files;
     const { content } = req.body;
 
-    const messsage = await messageService.sendFileMessage({userId, conservationId: id, files, content});
+    const messsage = await messageService.sendFileMessage({
+      userId,
+      conservationId: id,
+      files,
+      content,
+    });
+    return res.status(201).json({
+      status: "success",
+      message: "Message sent successfully",
+      data: messsage,
+    });
+  }
+
+  async sendFileMessageV2(req, res, next) {
+    const { id } = req.params;
+    const { _id: userId } = req.user;
+    const { content, files } = req.body;
+
+    const messsage = await messageService.sendFileMessageV2({
+      userId,
+      conservationId: id,
+      files,
+      content,
+    });
     return res.status(201).json({
       status: "success",
       message: "Message sent successfully",
@@ -74,7 +97,7 @@ class MessageController {
       userId,
       conservationId: id,
       content,
-      parentId
+      parentId,
     });
 
     return res.status(201).json({

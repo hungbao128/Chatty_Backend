@@ -186,15 +186,59 @@ class MessageService {
       await this.populateMessage(message),
       userId
     );
+  }
 
-    // await ConservationRepository.updateConservation(conservationId, {
-    //   lastMessage: message._id,
-    // });
+  async sendFileMessageV2({ userId, conservationId, files, content = "" }) {
+    const conversation = await ConservationRepository.isUserInConservation(
+      conservationId,
+      userId
+    );
+    if (conversation === null) {
+      throw new BadRequest("You are not in this conservation");
+    }
 
-    // return MessageHelper.generateMessage(
-    //   await this.populateMessage(message),
-    //   userId
-    // );
+    console.log(files);
+    const fileTypes = files.map((file) => file.mimetype.split("/")[0]);
+
+    const filePromises = files.map(async (file) => {
+      return await cloudinary.uploader.upload(file.path, {
+        folder: "chat-app",
+        resource_type: "auto",
+      });
+    });
+
+    const results = await Promise.all(filePromises);
+
+    const filesResult = results.map((result, index) => {
+      return {
+        url: result.secure_url,
+        type: fileTypes[index],
+      };
+    });
+
+    const message = await MessageRepository.createFileMessage({
+      userId,
+      conservationId,
+      files: filesResult,
+      content,
+    });
+
+    const members = conversation.members;
+
+    const updatePromises = members.map(async (memberId) => {
+      return await ConservationRepository.updateConservation(conservationId, {
+        lastMessage: message._id,
+        [`readStatus.${memberId}`]:
+          userId.toString() === memberId.toString() ? true : false,
+      });
+    });
+
+    await Promise.all(updatePromises);
+
+    return MessageHelper.generateMessage(
+      await this.populateMessage(message),
+      userId
+    );
   }
 }
 
