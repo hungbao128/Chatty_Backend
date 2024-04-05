@@ -1,22 +1,27 @@
 const BadRequest = require("../core/BadRequest");
-const cloudinary = require('./../configs/cloudinary');
+const cloudinary = require("./../configs/cloudinary");
 const MessageHelper = require("../helpers/MessageHelper");
 const ConservationRepository = require("../repositories/Conservation.repository");
 const MessageRepository = require("../repositories/Message.repository");
 
 class MessageService {
   async populateMessage(message) {
-    return await message.populate(
-      "sender",
-      "-password -createdAt -updatedAt -email -bio -dateOfBirth -gender -phone -__v"
-    ).then(result => result.populate({
-      path: "parent",
-      select: "-conservation -__v",
-      populate: {
-        path: 'sender',
-        select: '-password -createdAt -updatedAt -email -bio -dateOfBirth -gender -phone -__v'
-      }
-    }));
+    return await message
+      .populate(
+        "sender",
+        "-password -createdAt -updatedAt -email -bio -dateOfBirth -gender -phone -__v"
+      )
+      .then((result) =>
+        result.populate({
+          path: "parent",
+          select: "-conservation -__v",
+          populate: {
+            path: "sender",
+            select:
+              "-password -createdAt -updatedAt -email -bio -dateOfBirth -gender -phone -__v",
+          },
+        })
+      );
   }
 
   async getMessages({ userId, conservationId, page = 1, limit = 50 }) {
@@ -43,7 +48,10 @@ class MessageService {
   }
 
   async sendMessage({ userId, conservationId, content }) {
-    const conversation = await ConservationRepository.isUserInConservation(conservationId, userId);
+    const conversation = await ConservationRepository.isUserInConservation(
+      conservationId,
+      userId
+    );
     if (conversation === null) {
       throw new BadRequest("You are not in this conservation");
     }
@@ -59,9 +67,10 @@ class MessageService {
     const updatePromises = members.map(async (memberId) => {
       return await ConservationRepository.updateConservation(conservationId, {
         lastMessage: message._id,
-        [`readStatus.${memberId}`]: (userId.toString() === memberId.toString() ? true : false),
+        [`readStatus.${memberId}`]:
+          userId.toString() === memberId.toString() ? true : false,
       });
-    })
+    });
 
     await Promise.all(updatePromises);
 
@@ -72,7 +81,10 @@ class MessageService {
   }
 
   async replyMessage({ userId, conservationId, content, parentId }) {
-    const conversation = await ConservationRepository.isUserInConservation(conservationId, userId);
+    const conversation = await ConservationRepository.isUserInConservation(
+      conservationId,
+      userId
+    );
     if (conversation === null) {
       throw new BadRequest("You are not in this conservation");
     }
@@ -94,9 +106,10 @@ class MessageService {
     const updatePromises = members.map(async (memberId) => {
       return await ConservationRepository.updateConservation(conservationId, {
         lastMessage: message._id,
-        [`readStatus.${memberId}`]: (userId.toString() === memberId.toString() ? true : false),
+        [`readStatus.${memberId}`]:
+          userId.toString() === memberId.toString() ? true : false,
       });
-    })
+    });
 
     await Promise.all(updatePromises);
 
@@ -122,19 +135,23 @@ class MessageService {
     return true;
   }
 
-  async sendFileMessage({ userId, conservationId, files, content = '' }) {
-    const conversation = await ConservationRepository.isUserInConservation(conservationId, userId);
+  async sendFileMessage({ userId, conservationId, files, content = "" }) {
+    const conversation = await ConservationRepository.isUserInConservation(
+      conservationId,
+      userId
+    );
     if (conversation === null) {
       throw new BadRequest("You are not in this conservation");
     }
 
-    const fileTypes = files.map((file) => file.mimetype.split('/')[0]);
+    console.log(files);
+    const fileTypes = files.map((file) => file.mimetype.split("/")[0]);
 
     const filePromises = files.map(async (file) => {
       return await cloudinary.uploader.upload(file.path, {
         folder: "chat-app",
         resource_type: "auto",
-      })
+      });
     });
 
     const results = await Promise.all(filePromises);
@@ -158,9 +175,10 @@ class MessageService {
     const updatePromises = members.map(async (memberId) => {
       return await ConservationRepository.updateConservation(conservationId, {
         lastMessage: message._id,
-        [`readStatus.${memberId}`]: (userId.toString() === memberId.toString() ? true : false),
+        [`readStatus.${memberId}`]:
+          userId.toString() === memberId.toString() ? true : false,
       });
-    })
+    });
 
     await Promise.all(updatePromises);
 
@@ -168,7 +186,6 @@ class MessageService {
       await this.populateMessage(message),
       userId
     );
-    
 
     // await ConservationRepository.updateConservation(conservationId, {
     //   lastMessage: message._id,
