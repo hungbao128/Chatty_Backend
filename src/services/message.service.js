@@ -160,7 +160,7 @@ class MessageService {
       throw new BadRequest("You are not in this conservation");
     }
 
-    console.log(files);
+    console.log("FILES::: ", files);
     const fileTypes = files.map((file) => file.mimetype.split("/")[0]);
 
     const filePromises = files.map(async (file) => {
@@ -209,17 +209,16 @@ class MessageService {
       conservationId,
       userId
     );
+
     if (conversation === null) {
       throw new BadRequest("You are not in this conservation");
     }
 
-    console.log(files);
     // const fileTypes = files.map((file) => file.mimetype.split("/")[0]);
 
     const filePromises = files.map(async (file) => {
-      return await cloudinary.uploader.upload(file.path, {
+      return await cloudinary.uploader.upload(file, {
         folder: "chat-app",
-        resource_type: "auto",
       });
     });
 

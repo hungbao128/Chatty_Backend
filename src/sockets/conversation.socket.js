@@ -1,5 +1,3 @@
-const CONVERSATIONS = new Map();
-
 class ConservationSocketHandler {
   constructor(io) {
     this.io = io;
