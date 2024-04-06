@@ -135,6 +135,22 @@ class MessageService {
     return true;
   }
 
+  async setReadMessage({ userId, conservationId }) {
+    const conversation = await ConservationRepository.isUserInConservation(
+      conservationId,
+      userId
+    );
+    if (conversation === null) {
+      throw new BadRequest("You are not in this conservation");
+    }
+
+    await ConservationRepository.updateConservation(conservationId, {
+      [`readStatus.${userId.toString()}`]: true,
+    });
+
+    return true;
+  };
+
   async sendFileMessage({ userId, conservationId, files, content = "" }) {
     const conversation = await ConservationRepository.isUserInConservation(
       conservationId,

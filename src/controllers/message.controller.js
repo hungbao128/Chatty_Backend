@@ -106,6 +106,18 @@ class MessageController {
       data: message,
     });
   }
+
+  async setReadMessage(req, res, next) {
+    const { id } = req.params;
+    const { _id: userId } = req.user;
+
+    await messageService.setReadMessage({ userId, conservationId: id });
+
+    return res.status(200).json({
+      status: "success",
+      message: "Message read successfully",
+    });
+  }
 }
 
 module.exports = new MessageController();

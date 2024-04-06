@@ -13,8 +13,10 @@ class ConservationSocketHandler {
         socket.broadcast.emit("message:receive", data);
       });
 
-      socket.on("conversation:join", (data) => {
+      socket.on('message:delete', (data) => {
+        console.log('DELETE MESSAGE', data);
         
+        socket.broadcast.emit('message:deleted', data);
       });
     });
   }

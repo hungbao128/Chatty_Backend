@@ -53,5 +53,10 @@ router.post(
   catchAsync(authentication),
   catchAsync(messageController.replyMessage)
 );
+router.post(
+  "/:id/readMessages",
+  catchAsync(authentication),
+  catchAsync(messageController.setReadMessage)
+);
 
 module.exports = router;
