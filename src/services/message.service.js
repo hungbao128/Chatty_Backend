@@ -214,10 +214,10 @@ class MessageService {
       throw new BadRequest("You are not in this conservation");
     }
 
-    // const fileTypes = files.map((file) => file.mimetype.split("/")[0]);
+    const fileTypes = files.map((file) => file.mimetype.split("/")[0]);
 
     const filePromises = files.map(async (file) => {
-      return await cloudinary.uploader.upload(file, {
+      return await cloudinary.uploader.upload(file.data, {
         folder: "chat-app",
       });
     });
@@ -227,6 +227,7 @@ class MessageService {
     const filesResult = results.map((result, index) => {
       return {
         url: result.secure_url,
+        type: fileTypes[index],
       };
     });
 
