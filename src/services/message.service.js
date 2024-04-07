@@ -218,6 +218,7 @@ class MessageService {
     const filePromises = files.map(async (file) => {
       return await cloudinary.uploader.upload(file.data, {
         folder: "chat-app",
+        resource_type: 'auto'
       });
     });
 
