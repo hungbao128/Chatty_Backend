@@ -59,4 +59,10 @@ router.post(
   catchAsync(messageController.setReadMessage)
 );
 
+router.post(
+  "/:id/forwardFiles/",
+  catchAsync(authentication),
+  catchAsync(messageController.forwardFileMessage)
+);
+
 module.exports = router;

@@ -160,7 +160,6 @@ class MessageService {
       throw new BadRequest("You are not in this conservation");
     }
 
-    console.log("FILES::: ", files);
     const fileTypes = files.map((file) => file.mimetype.split("/")[0]);
 
     const filePromises = files.map(async (file) => {
@@ -236,6 +235,41 @@ class MessageService {
       conservationId,
       files: filesResult,
       content,
+    });
+
+    const members = conversation.members;
+
+    const updatePromises = members.map(async (memberId) => {
+      return await ConservationRepository.updateConservation(conservationId, {
+        lastMessage: message._id,
+        [`readStatus.${memberId}`]:
+          userId.toString() === memberId.toString() ? true : false,
+      });
+    });
+
+    await Promise.all(updatePromises);
+
+    return MessageHelper.generateMessage(
+      await this.populateMessage(message),
+      userId
+    );
+  }
+
+  async forwardFileMessage({ userId, conservationId, files, content = "" }) {
+    const conversation = await ConservationRepository.isUserInConservation(
+      conservationId,
+      userId
+    );
+
+    if (conversation === null) {
+      throw new BadRequest("You are not in this conservation");
+    }
+
+    const message = await MessageRepository.createFileMessage({
+      userId,
+      conservationId,
+      files,
+      content
     });
 
     const members = conversation.members;

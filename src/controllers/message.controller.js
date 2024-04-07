@@ -118,6 +118,25 @@ class MessageController {
       message: "Message read successfully",
     });
   }
+
+  async forwardFileMessage(req, res, next) {
+    const { id } = req.params;
+    const { _id: userId } = req.user;
+    const { files, content } = req.body;
+
+    const message = await messageService.forwardFileMessage({
+      userId,
+      conservationId: id,
+      files,
+      content
+    });
+
+    return res.status(201).json({
+      status: "success",
+      message: "Message forwarded successfully",
+      data: message,
+    });
+  }
 }
 
 module.exports = new MessageController();
