@@ -60,7 +60,7 @@ router.post(
 );
 
 router.post(
-  "/:id/forwardFiles/",
+  "/:id/forwardFiles",
   catchAsync(authentication),
   catchAsync(messageController.forwardFileMessage)
 );
