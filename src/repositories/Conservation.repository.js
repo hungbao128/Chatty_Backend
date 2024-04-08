@@ -15,6 +15,20 @@ class ConservationRepository {
     });
   }
 
+  async createGroupConservation({ creatorId, members, type = "group", name, image }) {
+    return await ConservationModel.create({
+      name,
+      image,
+      type,
+      creator: creatorId,
+      members,
+      readStatus: members.reduce((acc, cur) => {
+        acc[cur] = true;
+        return acc;
+      }, {}),
+    });
+  }
+
   async findConservationById(conservationId) {
     return await ConservationModel.findById(conservationId)
     .populate(

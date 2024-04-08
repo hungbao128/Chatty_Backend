@@ -35,6 +35,18 @@ class ConservationController {
             data: result
         });
     }
+
+    async createGroupConversation(req, res, next){
+        const {_id} = req.user;
+        const {name, members, image} = req.body;
+        const result = await conservationService.createGroupConservation({creatorId: _id, members, name, image});
+
+        return res.status(201).json({
+            status: "success",
+            message: 'Create group conversation successfully.',
+            data: result
+        });
+    }
 }
 
 module.exports = new ConservationController();

@@ -3,6 +3,7 @@ const userRepository = require("../repositories/User.repository");
 const ServerErrorRequest = require("../core/ServerErrorRequest");
 const BadRequest = require("../core/BadRequest");
 const ConservationHelper = require("../helpers/ConservationHelper");
+const cloudinary = require("../configs/cloudinary");
 
 class ConservationService {
   async conservationPopulate(conservation) {
@@ -80,6 +81,30 @@ class ConservationService {
     if(!isUserInConservation) throw new BadRequest("You are not in this conservation.");
     
     return ConservationHelper.generateConservation(conservation, userId);
+  }
+
+  async createGroupConservation({creatorId, members, name, image}){
+    if(!members.length) throw new BadRequest("Members must not be empty.");
+
+    members.push(creatorId);
+    const imageUrl = await cloudinary.uploader.upload(file, {
+      folder: 'chat-app',
+    })
+
+    const conservation = await conservationRepository.createGroupConservation({
+      creatorId,
+      members,
+      name,
+      image: imageUrl.secure_url,
+    });
+
+    if (!conservation)
+      throw new ServerErrorRequest("Cannot create conservation.");
+
+    return ConservationHelper.generateConservation(
+      await this.conservationPopulate(conservation),
+      creatorId
+    );
   }
 }
 

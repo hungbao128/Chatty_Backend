@@ -58,11 +58,11 @@ router.post(
   catchAsync(authentication),
   catchAsync(messageController.setReadMessage)
 );
-
 router.post(
   "/:id/forwardFiles",
   catchAsync(authentication),
   catchAsync(messageController.forwardFileMessage)
 );
+router.post('/createGroup', catchAsync(authentication), catchAsync(conservationController.createGroupConversation));
 
 module.exports = router;
