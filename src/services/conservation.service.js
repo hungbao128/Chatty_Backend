@@ -87,9 +87,12 @@ class ConservationService {
     if(!members.length) throw new BadRequest("Members must not be empty.");
 
     members.push(creatorId);
-    const imageUrl = await cloudinary.uploader.upload(file, {
-      folder: 'chat-app',
-    })
+    let imageUrl = '';
+    if(image){
+      imageUrl = await cloudinary.uploader.upload(image, {
+        folder: 'chat-app',
+      });
+    }
 
     const conservation = await conservationRepository.createGroupConservation({
       creatorId,
