@@ -6,6 +6,7 @@ const ConservationHelper = require("../helpers/ConservationHelper");
 const cloudinary = require("../configs/cloudinary");
 const MessageModel = require("../models/Message.model");
 const {socketIOObject} = require('./../sockets/conversation.socket');
+const UserRepository = require("../repositories/User.repository");
 
 class ConservationService {
   async conservationPopulate(conservation) {
@@ -133,7 +134,9 @@ class ConservationService {
       let isMemberInConservation = false;
       
       conservation.members.forEach(m => {
-        if(m._id.toString() === member.toString()) isMemberInConservation = true;
+        if(m._id.toString() === member.toString()) {
+          isMemberInConservation = true;
+        }
       });
 
       if(isMemberInConservation) throw new BadRequest("Member is already in this conservation.")
@@ -143,23 +146,25 @@ class ConservationService {
       
     });
 
-    const notificationMessages = members.map(async (member) => {
+    const memberNames = await UserRepository.findUserByIds(members);
+
+    const notificationMessages = members.map(async (member, idx) => {
       const message = new MessageModel({
         conservation: conservationId,
-        sender: userId,
-        content: "You were added to this conversation.",
+        sender: member,
+        content: `${memberNames[idx].name} was added to this conversation.`,
         type: "notification",
       });
 
       return await message.save();
     });
 
-    await Promise.all([...notificationMessages, conservation.save()]);
-
-    return ConservationHelper.generateConservation(
-      await this.conservationPopulate(conservation),
-      userId
-    );
+    const messages = await Promise.all(notificationMessages);
+    await conservation.save();
+    return {
+      conservation: ConservationHelper.generateConservation(await this.conservationPopulate(conservation), userId),
+      messages,
+    };
   }
 }
 

@@ -28,6 +28,10 @@ class UserRepository{
     async findUserById(id){
         return await UserModel.findById(id);
     }
+
+    async findUserByIds(ids){
+        return await UserModel.find({_id: {$in: ids}});
+    }
 }
 
 module.exports = new UserRepository();
