@@ -1,6 +1,9 @@
+let socketIOObject;
+
 class ConservationSocketHandler {
   constructor(io) {
     this.io = io;
+    socketIOObject = io;
   }
 
   listen() {
@@ -20,4 +23,4 @@ class ConservationSocketHandler {
   }
 }
 
-module.exports = { ConservationSocketHandler };
+module.exports = { ConservationSocketHandler, socketIOObject };

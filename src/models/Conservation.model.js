@@ -37,7 +37,13 @@ const ConservationSchema = new Schema({
         type: Map,
         of: Boolean,
         default: {}
-    }
+    },
+
+    leaders: {
+        type: [Schema.Types.ObjectId],
+        ref: 'User',
+        default: []
+    },
     
 }, {timestamps: true});
 

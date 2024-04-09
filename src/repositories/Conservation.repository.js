@@ -26,6 +26,7 @@ class ConservationRepository {
         acc[cur] = true;
         return acc;
       }, {}),
+      leaders: [creatorId],
     });
   }
 
@@ -37,6 +38,10 @@ class ConservationRepository {
     )
     .populate(
       "creator",
+      "-password -createdAt -updatedAt -bio -dateOfBirth -gender -phone -email -__v"
+    )
+    .populate(
+      "leaders",
       "-password -createdAt -updatedAt -bio -dateOfBirth -gender -phone -email -__v"
     )
     .populate("lastMessage", "-seenBy -createdAt -conservation -__v");
@@ -58,6 +63,10 @@ class ConservationRepository {
         "creator",
         "-password -createdAt -updatedAt -bio -dateOfBirth -gender -phone -email -__v"
       )
+      .populate(
+        "leaders",
+        "-password -createdAt -updatedAt -bio -dateOfBirth -gender -phone -email -__v"
+      )
       .populate("lastMessage", "-seenBy -createdAt -conservation -__v");
   }
 
@@ -69,6 +78,10 @@ class ConservationRepository {
       )
       .populate(
         "creator",
+        "-password -createdAt -updatedAt -bio -dateOfBirth -gender -phone -email -__v"
+      )
+      .populate(
+        "leaders",
         "-password -createdAt -updatedAt -bio -dateOfBirth -gender -phone -email -__v"
       )
       .populate("lastMessage", "-seenBy -createdAt -conservation -__v")

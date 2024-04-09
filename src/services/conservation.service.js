@@ -4,6 +4,8 @@ const ServerErrorRequest = require("../core/ServerErrorRequest");
 const BadRequest = require("../core/BadRequest");
 const ConservationHelper = require("../helpers/ConservationHelper");
 const cloudinary = require("../configs/cloudinary");
+const MessageModel = require("../models/Message.model");
+const {socketIOObject} = require('./../sockets/conversation.socket');
 
 class ConservationService {
   async conservationPopulate(conservation) {
@@ -18,6 +20,12 @@ class ConservationService {
           "-password -createdAt -updatedAt -bio -dateOfBirth -gender -phone -email -__v"
         )
       )
+      .then((result) => 
+        result.populate(
+          "leaders", 
+          "-password -createdAt -updatedAt -bio -dateOfBirth -gender -phone -email -__v"
+        )
+    )
       .then((result) =>
         result.populate("lastMessage", "-seenBy -createdAt -conservation -__v")
       );
@@ -107,6 +115,50 @@ class ConservationService {
     return ConservationHelper.generateConservation(
       await this.conservationPopulate(conservation),
       creatorId
+    );
+  }
+
+  async addMembersToGroupConversation({conservationId, userId, members}){
+    const conservation = await conservationRepository.findConservationById(conservationId);
+    if (!conservation) throw new BadRequest("Conservation not found.");
+    
+    let isInConservation = false;
+    conservation.members.forEach(member => {
+      if(member._id.toString() === userId.toString()) isInConservation = true;
+    });
+
+    if(!isInConservation) throw new BadRequest("You are not in this conservation.");
+
+    members.forEach(member => {
+      let isMemberInConservation = false;
+      
+      conservation.members.forEach(m => {
+        if(m._id.toString() === member.toString()) isMemberInConservation = true;
+      });
+
+      if(isMemberInConservation) throw new BadRequest("Member is already in this conservation.")
+
+      conservation.members.push(member);
+      conservation.readStatus.set(member, true);
+      
+    });
+
+    const notificationMessages = members.map(async (member) => {
+      const message = new MessageModel({
+        conservation: conservationId,
+        sender: userId,
+        content: "You were added to this conversation.",
+        type: "notification",
+      });
+
+      return await message.save();
+    });
+
+    await Promise.all([...notificationMessages, conservation.save()]);
+
+    return ConservationHelper.generateConservation(
+      await this.conservationPopulate(conservation),
+      userId
     );
   }
 }

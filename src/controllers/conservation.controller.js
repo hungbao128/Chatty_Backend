@@ -47,6 +47,19 @@ class ConservationController {
             data: result
         });
     }
+
+    async addMembersToGroupConversation(req, res, next){
+        const {_id} = req.user;
+        const {id} = req.params;
+        const {members} = req.body;
+        const result = await conservationService.addMembersToGroupConversation({conservationId: id, members, userId: _id});
+
+        return res.status(200).json({
+            status: "success",
+            message: 'Add members to group conversation successfully.',
+            data: result
+        });
+    }
 }
 
 module.exports = new ConservationController();

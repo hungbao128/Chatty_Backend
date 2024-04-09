@@ -64,5 +64,5 @@ router.post(
   catchAsync(messageController.forwardFileMessage)
 );
 router.post('/createGroup', catchAsync(authentication), catchAsync(conservationController.createGroupConversation));
-
+router.post('/:id/addMembers', catchAsync(authentication), catchAsync(conservationController.addMembersToGroupConversation));
 module.exports = router;

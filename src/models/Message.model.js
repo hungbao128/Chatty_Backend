@@ -32,7 +32,7 @@ const MessageSchema = new Schema(
 
     type: {
       type: String,
-      enum: ["text", "image", "file", "video"],
+      enum: ["text", "file", "notification"],
       default: "text",
     },
 
