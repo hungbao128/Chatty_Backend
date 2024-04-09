@@ -7,6 +7,8 @@ const cloudinary = require("../configs/cloudinary");
 const MessageModel = require("../models/Message.model");
 const {socketIOObject} = require('./../sockets/conversation.socket');
 const UserRepository = require("../repositories/User.repository");
+const MessageHelper = require("../helpers/MessageHelper");
+const messageService = require("./message.service");
 
 class ConservationService {
   async conservationPopulate(conservation) {
@@ -160,10 +162,16 @@ class ConservationService {
     });
 
     const messages = await Promise.all(notificationMessages);
+    const messagePromises = messages.map(async (message) => {
+      return await messageService.populateMessage(message);
+    })
+
+    const messes = await Promise.all(messagePromises);
+    const messagesResult = messes.map((message) => MessageHelper.generateMessage(message, userId));
     await conservation.save();
     return {
       conservation: ConservationHelper.generateConservation(await this.conservationPopulate(conservation), userId),
-      messages,
+      messages: messagesResult,
     };
   }
 }
