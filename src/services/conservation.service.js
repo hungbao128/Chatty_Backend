@@ -177,14 +177,17 @@ class ConservationService {
     const messagesResult = messes.map((message) =>
       MessageHelper.generateMessage(message, userId)
     );
+
     await conservation.save();
-    return {
-      conservation: ConservationHelper.generateConservation(
-        await this.conservationPopulate(conservation),
-        userId
-      ),
+
+    socketIOObject.value.emit("message:notification", {
+      conservationId,
       messages: messagesResult,
-    };
+    });
+    return ConservationHelper.generateConservation(
+      await this.conservationPopulate(conservation),
+      userId
+    );
   }
 }
 
