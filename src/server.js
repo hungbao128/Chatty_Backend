@@ -1,12 +1,15 @@
-const {Server} = require('socket.io');
-const fs = require('fs');
-const express = require('express');
-const cors = require('cors');
-const {createServer} = require('http');
-const MongoDBConnection = require('./databases/mongodb.init');
-const envConfig = require('./envConfig');
-const { UserSocketHandler } = require('./sockets/user.socket');
-const { ConservationSocketHandler } = require('./sockets/conversation.socket');
+const { Server } = require("socket.io");
+const fs = require("fs");
+const express = require("express");
+const cors = require("cors");
+const { createServer } = require("http");
+const MongoDBConnection = require("./databases/mongodb.init");
+const envConfig = require("./envConfig");
+const { UserSocketHandler } = require("./sockets/user.socket");
+const {
+  ConservationSocketHandler,
+  socketIOObject,
+} = require("./sockets/conversation.socket");
 
 const SERVER_PORT = 8555;
 
@@ -23,13 +26,13 @@ class ApplicationServer {
     this.#globalErrorHandling(this.app);
     this.#startServer(this.app);
   }
-    #initalizeFolderUpload(){
-      if(!fs.existsSync('uploads')) fs.mkdirSync('uploads');
-    }
+  #initalizeFolderUpload() {
+    if (!fs.existsSync("uploads")) fs.mkdirSync("uploads");
+  }
 
-    #connectDatabase(){
-        MongoDBConnection.getInstance();
-    }
+  #connectDatabase() {
+    MongoDBConnection.getInstance();
+  }
 
   #standardMiddleware(app) {
     app.use(express.json());
@@ -39,7 +42,7 @@ class ApplicationServer {
 
   #routes(app) {
     app.use("/api/v1", require("./routes"));
-    
+
     app.use("*", (req, res, next) => {
       res.status(404).json({
         message: "Route not found",
@@ -54,7 +57,7 @@ class ApplicationServer {
         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
       },
     });
-    
+
     return io;
   }
 
@@ -65,15 +68,15 @@ class ApplicationServer {
       let message = error.message || "Internal server error";
       let stack = error.stack;
 
-      if(envConfig.isProduction()){
+      if (envConfig.isProduction()) {
         stack = undefined;
-        statusCode === 500 ? message = "Internal server error" : message;
+        statusCode === 500 ? (message = "Internal server error") : message;
       }
-      
+
       res.status(statusCode).json({
         status,
         message,
-        stack
+        stack,
       });
     });
   }

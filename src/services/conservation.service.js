@@ -5,7 +5,7 @@ const BadRequest = require("../core/BadRequest");
 const ConservationHelper = require("../helpers/ConservationHelper");
 const cloudinary = require("../configs/cloudinary");
 const MessageModel = require("../models/Message.model");
-const {socketIOObject} = require('./../sockets/conversation.socket');
+const { socketIOObject } = require("./../sockets/conversation.socket");
 const UserRepository = require("../repositories/User.repository");
 const MessageHelper = require("../helpers/MessageHelper");
 const messageService = require("./message.service");
@@ -23,12 +23,12 @@ class ConservationService {
           "-password -createdAt -updatedAt -bio -dateOfBirth -gender -phone -email -__v"
         )
       )
-      .then((result) => 
+      .then((result) =>
         result.populate(
-          "leaders", 
+          "leaders",
           "-password -createdAt -updatedAt -bio -dateOfBirth -gender -phone -email -__v"
         )
-    )
+      )
       .then((result) =>
         result.populate("lastMessage", "-seenBy -createdAt -conservation -__v")
       );
@@ -79,29 +79,33 @@ class ConservationService {
     return result;
   }
 
-  async findConservationById({conservationId, userId}) {
-    const conservation = await conservationRepository.findConservationById(conservationId);
+  async findConservationById({ conservationId, userId }) {
+    const conservation = await conservationRepository.findConservationById(
+      conservationId
+    );
     if (!conservation) throw new BadRequest("Conservation not found.");
 
     let isUserInConservation = false;
-    conservation.members.forEach(member => {
+    conservation.members.forEach((member) => {
       // console.log(member._id.toString(), userId.toString());
-      if (member._id.toString() === userId.toString()) isUserInConservation = true;
-    })
+      if (member._id.toString() === userId.toString())
+        isUserInConservation = true;
+    });
 
-    if(!isUserInConservation) throw new BadRequest("You are not in this conservation.");
-    
+    if (!isUserInConservation)
+      throw new BadRequest("You are not in this conservation.");
+
     return ConservationHelper.generateConservation(conservation, userId);
   }
 
-  async createGroupConservation({creatorId, members, name, image}){
-    if(!members.length) throw new BadRequest("Members must not be empty.");
+  async createGroupConservation({ creatorId, members, name, image }) {
+    if (!members.length) throw new BadRequest("Members must not be empty.");
 
     members.push(creatorId);
-    let imageUrl = '';
-    if(image){
+    let imageUrl = "";
+    if (image) {
       imageUrl = await cloudinary.uploader.upload(image, {
-        folder: 'chat-app',
+        folder: "chat-app",
       });
     }
 
@@ -121,31 +125,34 @@ class ConservationService {
     );
   }
 
-  async addMembersToGroupConversation({conservationId, userId, members}){
-    const conservation = await conservationRepository.findConservationById(conservationId);
+  async addMembersToGroupConversation({ conservationId, userId, members }) {
+    const conservation = await conservationRepository.findConservationById(
+      conservationId
+    );
     if (!conservation) throw new BadRequest("Conservation not found.");
-    
+
     let isInConservation = false;
-    conservation.members.forEach(member => {
-      if(member._id.toString() === userId.toString()) isInConservation = true;
+    conservation.members.forEach((member) => {
+      if (member._id.toString() === userId.toString()) isInConservation = true;
     });
 
-    if(!isInConservation) throw new BadRequest("You are not in this conservation.");
+    if (!isInConservation)
+      throw new BadRequest("You are not in this conservation.");
 
-    members.forEach(member => {
+    members.forEach((member) => {
       let isMemberInConservation = false;
-      
-      conservation.members.forEach(m => {
-        if(m._id.toString() === member.toString()) {
+
+      conservation.members.forEach((m) => {
+        if (m._id.toString() === member.toString()) {
           isMemberInConservation = true;
         }
       });
 
-      if(isMemberInConservation) throw new BadRequest("Member is already in this conservation.")
+      if (isMemberInConservation)
+        throw new BadRequest("Member is already in this conservation.");
 
       conservation.members.push(member);
       conservation.readStatus.set(member, true);
-      
     });
 
     const memberNames = await UserRepository.findUserByIds(members);
@@ -164,13 +171,18 @@ class ConservationService {
     const messages = await Promise.all(notificationMessages);
     const messagePromises = messages.map(async (message) => {
       return await messageService.populateMessage(message);
-    })
+    });
 
     const messes = await Promise.all(messagePromises);
-    const messagesResult = messes.map((message) => MessageHelper.generateMessage(message, userId));
+    const messagesResult = messes.map((message) =>
+      MessageHelper.generateMessage(message, userId)
+    );
     await conservation.save();
     return {
-      conservation: ConservationHelper.generateConservation(await this.conservationPopulate(conservation), userId),
+      conservation: ConservationHelper.generateConservation(
+        await this.conservationPopulate(conservation),
+        userId
+      ),
       messages: messagesResult,
     };
   }
