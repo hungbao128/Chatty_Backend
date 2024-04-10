@@ -70,8 +70,12 @@ class ConservationRepository {
       .populate("lastMessage", "-seenBy -createdAt -conservation -__v");
   }
 
-  async findConservationsByUserId(userId) {
-    return await ConservationModel.find({ members: { $in: [userId] } })
+  async findConservationsByUserId(userId, type) {
+    let filter = { members: { $in: [userId] } };
+
+    if (type) filter.type = type;
+
+    return await ConservationModel.find(filter)
       .populate(
         "members",
         "-password -createdAt -updatedAt -email -bio -dateOfBirth -gender -phone -__v"

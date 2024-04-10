@@ -15,7 +15,8 @@ class ConservationController {
 
   async getUserConservations(req, res, next) {
     const { _id } = req.user;
-    const result = await conservationService.getUserConservations(_id);
+    const { type } = req.query;
+    const result = await conservationService.getUserConservations(_id, type);
 
     return res.status(200).json({
       status: "success",

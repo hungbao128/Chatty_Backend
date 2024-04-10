@@ -70,9 +70,11 @@ class ConservationService {
     );
   }
 
-  async getUserConservations(userId) {
+  async getUserConservations(userId, type = '') {
+    console.log(`type:: ${type}`);
     const conservations =
-      await conservationRepository.findConservationsByUserId(userId);
+      await conservationRepository.findConservationsByUserId(userId, type);
+      
     const result = conservations.map((el) =>
       ConservationHelper.generateConservation(el, userId)
     );
