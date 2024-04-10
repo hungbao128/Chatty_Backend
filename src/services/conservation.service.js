@@ -184,6 +184,89 @@ class ConservationService {
       conservationId,
       messages: messagesResult,
     });
+
+    return ConservationHelper.generateConservation(
+      await this.conservationPopulate(conservation),
+      userId
+    );
+  }
+
+  async removeMembersFromGroupConversation({
+    conservationId,
+    userId,
+    members,
+  }) {
+    const conservation = await conservationRepository.findConservationById(
+      conservationId
+    );
+
+    if (!conservation) throw new BadRequest("Conservation not found.");
+
+    let isLeader = false;
+    conservation.leaders.forEach((leader) => {
+      if (leader._id.toString() === userId.toString()) isLeader = true;
+    });
+
+    if (!isLeader)
+      throw new BadRequest("You cannot remove members from this group.");
+
+    let isInConservation = false;
+    conservation.members.forEach((member) => {
+      if (member._id.toString() === userId.toString()) isInConservation = true;
+    });
+
+    if (!isInConservation)
+      throw new BadRequest("You are not in this conservation.");
+
+    members.forEach((member) => {
+      if (member.toString() === userId.toString())
+        throw new BadRequest("Cannot remove yourself from this conversation.");
+
+      let isMemberInConservation = false;
+
+      conservation.members.forEach((m) => {
+        if (m._id.toString() === member.toString()) {
+          isMemberInConservation = true;
+        }
+      });
+
+      if (!isMemberInConservation)
+        throw new BadRequest("Member is not in this conservation.");
+
+      conservation.members = conservation.members.filter(
+        (m) => m._id.toString() !== member.toString()
+      );
+      conservation.readStatus.delete(member);
+    });
+
+    const memberNames = await UserRepository.findUserByIds(members);
+
+    const notificationMessages = members.map(async (member, idx) => {
+      const message = new MessageModel({
+        conservation: conservationId,
+        sender: member,
+        content: `${memberNames[idx].name} was removed to this conversation.`,
+        type: "notification",
+      });
+
+      return await message.save();
+    });
+
+    const messages = await Promise.all(notificationMessages);
+    const messagePromises = messages.map(async (message) => {
+      return await messageService.populateMessage(message);
+    });
+
+    const messes = await Promise.all(messagePromises);
+    const messagesResult = messes.map((message) =>
+      MessageHelper.generateMessage(message, userId)
+    );
+    await conservation.save();
+
+    socketIOObject.value.emit("message:notification", {
+      conservationId,
+      messages: messagesResult,
+    });
     return ConservationHelper.generateConservation(
       await this.conservationPopulate(conservation),
       userId

@@ -63,6 +63,19 @@ router.post(
   catchAsync(authentication),
   catchAsync(messageController.forwardFileMessage)
 );
-router.post('/createGroup', catchAsync(authentication), catchAsync(conservationController.createGroupConversation));
-router.post('/:id/addMembers', catchAsync(authentication), catchAsync(conservationController.addMembersToGroupConversation));
+router.post(
+  "/createGroup",
+  catchAsync(authentication),
+  catchAsync(conservationController.createGroupConversation)
+);
+router.post(
+  "/:id/addMembers",
+  catchAsync(authentication),
+  catchAsync(conservationController.addMembersToGroupConversation)
+);
+router.post(
+  "/:id/removeMembers",
+  catchAsync(authentication),
+  catchAsync(conservationController.removeMembersFromGroupConversation)
+);
 module.exports = router;
