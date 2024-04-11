@@ -70,7 +70,7 @@ class ConservationService {
     );
   }
 
-  async getUserConservations(userId, type = '') {
+  async getUserConservations(userId, type = "") {
     const conservations =
       await conservationRepository.findConservationsByUserId(userId, type);
 
@@ -309,7 +309,12 @@ class ConservationService {
     });
   }
 
-  async changeGroupConversationName({ conservationId, userId, userName, name }) {
+  async changeGroupConversationName({
+    conservationId,
+    userId,
+    userName,
+    name,
+  }) {
     const conservation = await conservationRepository.findConservationById(
       conservationId
     );
@@ -329,7 +334,10 @@ class ConservationService {
     socketIOObject.value.emit("message:notification", {
       conservationId,
       messages: [MessageHelper.generateMessage(message, userId)],
-      conservation,
+      conversation: ConservationHelper.generateConservation(
+        await this.conservationPopulate(conservation),
+        userId
+      ),
     });
   }
 }
