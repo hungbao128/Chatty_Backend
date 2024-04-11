@@ -78,4 +78,5 @@ router.post(
   catchAsync(authentication),
   catchAsync(conservationController.removeMembersFromGroupConversation)
 );
+router.post('/:id/leaveGroup', catchAsync(authentication), catchAsync(conservationController.leaveGroupConversation));
 module.exports = router;

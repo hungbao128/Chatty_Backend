@@ -184,13 +184,11 @@ class ConservationService {
     socketIOObject.value.emit("message:notification", {
       conservationId,
       messages: messagesResult,
-      conversation: conservation,
+      conversation: ConservationHelper.generateConservation(
+        await this.conservationPopulate(conservation),
+        userId
+      ),
     });
-
-    return ConservationHelper.generateConservation(
-      await this.conservationPopulate(conservation),
-      userId
-    );
   }
 
   async removeMembersFromGroupConversation({
@@ -268,12 +266,48 @@ class ConservationService {
     socketIOObject.value.emit("message:notification", {
       conservationId,
       messages: messagesResult,
-      conversation: conservation,
+      conversation: ConservationHelper.generateConservation(
+        await this.conservationPopulate(conservation),
+        userId
+      ),
     });
-    return ConservationHelper.generateConservation(
-      await this.conservationPopulate(conservation),
-      userId
+  }
+
+  async leaveGroupConversation({ conservationId, userId, userName }) {
+    const conservation = await conservationRepository.findConservationById(
+      conservationId
     );
+
+    if (!conservation) throw new BadRequest("Conservation not found.");
+
+    conservation.leaders.forEach((leader) => {
+      if (leader._id.toString() === userId.toString())
+        throw new BadRequest("You cannot leave this group.");
+    });
+
+    conservation.members = conservation.members.filter(
+      (member) => member._id.toString() !== userId.toString()
+    );
+    conservation.readStatus.delete(userId);
+
+    const message = new MessageModel({
+      conservation: conservationId,
+      sender: userId,
+      content: `${userName} left this conversation.`,
+      type: "notification",
+    });
+
+    await Promise.all([message.save(), conservation.save()]);
+
+    socketIOObject.value.emit("message:notification", {
+      conservationId,
+      messages: [message],
+      conversation: ConservationHelper.generateConservation(
+        await this.conservationPopulate(conservation),
+        userId
+      ),
+    });
+
   }
 }
 

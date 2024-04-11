@@ -88,6 +88,22 @@ class ConservationController {
       data: result,
     });
   }
+
+  async leaveGroupConversation(req, res, next) {
+    const { _id, name } = req.user;
+    const { id } = req.params;
+    const result = await conservationService.leaveGroupConversation({
+      conservationId: id,
+      userId: _id,
+      userName: name
+    });
+
+    return res.status(200).json({
+      status: "success",
+      message: "Leave group conversation successfully.",
+      data: result,
+    });
+  }
 }
 
 module.exports = new ConservationController();
