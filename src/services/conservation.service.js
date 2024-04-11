@@ -301,13 +301,36 @@ class ConservationService {
 
     socketIOObject.value.emit("message:notification", {
       conservationId,
-      messages: [message],
+      messages: [MessageHelper.generateMessage(message, userId)],
       conversation: ConservationHelper.generateConservation(
         await this.conservationPopulate(conservation),
         userId
       ),
     });
+  }
 
+  async changeGroupConversationName({ conservationId, userId, userName, name }) {
+    const conservation = await conservationRepository.findConservationById(
+      conservationId
+    );
+
+    if (!conservation) throw new BadRequest("Conservation not found.");
+
+    const message = new MessageModel({
+      conservation: conservationId,
+      sender: userId,
+      content: `${userName} change group name to ${name}.`,
+      type: "notification",
+    });
+
+    conservation.name = name;
+    await Promise.all([message.save(), conservation.save()]);
+
+    socketIOObject.value.emit("message:notification", {
+      conservationId,
+      messages: [MessageHelper.generateMessage(message, userId)],
+      conservation,
+    });
   }
 }
 

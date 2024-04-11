@@ -104,6 +104,24 @@ class ConservationController {
       data: result,
     });
   }
+
+  async changeGroupConversationName(req, res, next) {
+    const { _id, name: userName } = req.user;
+    const { id } = req.params;
+    const { name } = req.body;
+    const result = await conservationService.changeGroupConversationName({
+      conservationId: id,
+      userId: _id,
+      userName,
+      name,
+    });
+
+    return res.status(200).json({
+      status: "success",
+      message: "Change group conversation name successfully.",
+      data: result,
+    });
+  }
 }
 
 module.exports = new ConservationController();
