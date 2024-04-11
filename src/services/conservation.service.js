@@ -184,6 +184,7 @@ class ConservationService {
     socketIOObject.value.emit("message:notification", {
       conservationId,
       messages: messagesResult,
+      conversation: conservation,
     });
 
     return ConservationHelper.generateConservation(
@@ -267,6 +268,7 @@ class ConservationService {
     socketIOObject.value.emit("message:notification", {
       conservationId,
       messages: messagesResult,
+      conversation: conservation,
     });
     return ConservationHelper.generateConservation(
       await this.conservationPopulate(conservation),
