@@ -105,6 +105,10 @@ class ConservationRepository {
       members: { $in: [userId] },
     });
   }
+
+  async deleteConservationById(conservationId) {
+    return await ConservationModel.deleteOne({ _id: new ObjectId(conservationId) });
+  }
 }
 
 module.exports = new ConservationRepository();

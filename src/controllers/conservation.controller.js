@@ -122,6 +122,21 @@ class ConservationController {
       data: result,
     });
   }
+
+  async disbandGroupConversation(req, res, next) {
+    const { _id } = req.user;
+    const { id } = req.params;
+    const result = await conservationService.disbandGroupConversation({
+      conservationId: id,
+      userId: _id,     
+    });
+
+    return res.status(200).json({
+      status: "success",
+      message: "Disband group conversation successfully.",
+      data: result,
+    });
+  }
 }
 
 module.exports = new ConservationController();

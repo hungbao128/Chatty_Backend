@@ -340,6 +340,27 @@ class ConservationService {
       ),
     });
   }
+
+  async disbandGroupConversation({ conservationId, userId }) {
+    const conservation = await conservationRepository.findConservationById(
+      conservationId
+    );
+
+    if (!conservation) throw new BadRequest("Conservation not found.");
+
+    let isLeader = false;
+    conservation.leaders.forEach((leader) => {
+      if (leader._id.toString() === userId.toString()) isLeader = true;
+    });
+
+    if(!isLeader) throw new BadRequest("You cannot disband this group.");
+    
+    await conservationRepository.deleteConservationById(conservationId);
+
+    socketIOObject.value.emit("conversation:disband", {
+      conservationId
+    });
+  }
 }
 
 module.exports = new ConservationService();
