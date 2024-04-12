@@ -120,10 +120,10 @@ class ConservationService {
     if (!conservation)
       throw new ServerErrorRequest("Cannot create conservation.");
 
-    return ConservationHelper.generateConservation(
-      await this.conservationPopulate(conservation),
-      creatorId
-    );
+    socketIOObject.value.emit('conversation:new', {
+      memberIds: members,
+      conversation: ConservationHelper.generateConservation(await this.conservationPopulate(conservation), creatorId)
+    })
   }
 
   async addMembersToGroupConversation({ conservationId, userId, members }) {
