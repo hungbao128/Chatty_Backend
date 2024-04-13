@@ -137,6 +137,22 @@ class ConservationController {
       data: result,
     });
   }
+
+  async transferGroupConversationLeader(req, res, next) {
+    const { _id } = req.user;
+    const { id, userId } = req.params;
+    const result = await conservationService.transferGroupConversationLeader({
+      conservationId: id,
+      userId: _id,
+      newLeaderId: userId,
+    });
+
+    return res.status(200).json({
+      status: "success",
+      message: "Transfer group conversation leader successfully.",
+      data: result,
+    });
+  }
 }
 
 module.exports = new ConservationController();

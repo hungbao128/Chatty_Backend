@@ -361,6 +361,45 @@ class ConservationService {
       conservationId
     });
   }
+
+  async transferGroupConversationLeader({conservationId, userId, newLeaderId}) {
+    const conservation = await conservationRepository.findConservationById(
+      conservationId
+    );
+
+    if (!conservation) throw new BadRequest("Conservation not found.");
+
+    let isLeader = false;
+    let newLeaderName = '';
+    conservation.leaders.forEach((leader) => {
+      console.log(leader);
+      if (leader._id.toString() === userId.toString()) {
+        isLeader = true
+        newLeaderName = leader.name;
+      };
+    });
+
+    if(!isLeader) throw new BadRequest("You cannot transfer this group.");
+    
+    const message = new MessageModel({
+      conservation: conservationId,
+      sender: userId,
+      content: `${newLeaderName} has become admin of this group.`,
+      type: "notification",
+    });
+
+    conservation.leaders = [newLeaderId];
+    await Promise.all([conservation.save(), message.save()]);
+
+    socketIOObject.value.emit("message:notification", {
+      conservationId,
+      messages: [MessageHelper.generateMessage(message, userId)],
+      conversation: ConservationHelper.generateConservation(
+        await this.conservationPopulate(conservation),
+        userId
+      ),
+    });
+  }
 }
 
 module.exports = new ConservationService();
