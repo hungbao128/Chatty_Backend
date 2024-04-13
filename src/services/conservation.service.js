@@ -363,6 +363,8 @@ class ConservationService {
   }
 
   async transferGroupConversationLeader({conservationId, userId, newLeaderId}) {
+    if(userId === newLeaderId) throw new BadRequest("You cannot transfer to yourself.");
+
     const conservation = await conservationRepository.findConservationById(
       conservationId
     );
@@ -379,6 +381,13 @@ class ConservationService {
       };
     });
 
+    let isNewLeaderInConservation = false;
+    conservation.members.forEach((member) => {
+      if(member._id.toString() === newLeaderId.toString()) isNewLeaderInConservation = true;
+    });
+
+    if(!isNewLeaderInConservation) throw new BadRequest("New leader is not in this conservation.");
+    
     if(!isLeader) throw new BadRequest("You cannot transfer this group.");
     
     const message = new MessageModel({
