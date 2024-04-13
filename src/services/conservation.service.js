@@ -382,7 +382,7 @@ class ConservationService {
     let isNewLeaderInConservation = false;
     conservation.members.forEach((member) => {
       if(member._id.toString() === newLeaderId.toString()) {
-        newLeaderName = leader.name;
+        newLeaderName = member.name;
         isNewLeaderInConservation = true
       };
     });
