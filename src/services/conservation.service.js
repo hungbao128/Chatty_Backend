@@ -374,16 +374,17 @@ class ConservationService {
     let isLeader = false;
     let newLeaderName = '';
     conservation.leaders.forEach((leader) => {
-      console.log(leader);
       if (leader._id.toString() === userId.toString()) {
         isLeader = true
-        newLeaderName = leader.name;
       };
     });
 
     let isNewLeaderInConservation = false;
     conservation.members.forEach((member) => {
-      if(member._id.toString() === newLeaderId.toString()) isNewLeaderInConservation = true;
+      if(member._id.toString() === newLeaderId.toString()) {
+        newLeaderName = leader.name;
+        isNewLeaderInConservation = true
+      };
     });
 
     if(!isNewLeaderInConservation) throw new BadRequest("New leader is not in this conservation.");
