@@ -299,9 +299,11 @@ class ConservationService {
 
     await Promise.all([message.save(), conservation.save()]);
 
+    const messagePopulate = await messageService.populateMessage(message);
+
     socketIOObject.value.emit("message:notification", {
       conservationId,
-      messages: [MessageHelper.generateMessage(message, userId)],
+      messages: [MessageHelper.generateMessage(messagePopulate, userId)],
       conversation: ConservationHelper.generateConservation(
         await this.conservationPopulate(conservation),
         userId
@@ -331,9 +333,11 @@ class ConservationService {
     conservation.name = name;
     await Promise.all([message.save(), conservation.save()]);
 
+    const messagePopulate = await messageService.populateMessage(message);
+
     socketIOObject.value.emit("message:notification", {
       conservationId,
-      messages: [MessageHelper.generateMessage(message, userId)],
+      messages: [MessageHelper.generateMessage(messagePopulate, userId)],
       conversation: ConservationHelper.generateConservation(
         await this.conservationPopulate(conservation),
         userId
@@ -362,9 +366,11 @@ class ConservationService {
     })
     await Promise.all([conservation.save(), message.save()]);
 
+    const messagePopulate = await messageService.populateMessage(message);
+
     socketIOObject.value.emit("message:notification", {
       conservationId,
-      messages: [MessageHelper.generateMessage(message, userId)],
+      messages: [MessageHelper.generateMessage(messagePopulate, userId)],
       conversation: ConservationHelper.generateConservation(
         await this.conservationPopulate(conservation),
         userId
@@ -432,9 +438,11 @@ class ConservationService {
     conservation.leaders = [newLeaderId];
     await Promise.all([conservation.save(), message.save()]);
 
+    const messagePopulate = await messageService.populateMessage(message);
+
     socketIOObject.value.emit("message:notification", {
       conservationId,
-      messages: [MessageHelper.generateMessage(message, userId)],
+      messages: [MessageHelper.generateMessage(messagePopulate, userId)],
       conversation: ConservationHelper.generateConservation(
         await this.conservationPopulate(conservation),
         userId
