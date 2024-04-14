@@ -393,7 +393,7 @@ class ConservationService {
     
     const message = new MessageModel({
       conservation: conservationId,
-      sender: userId,
+      sender: newLeaderId,
       content: `${newLeaderName} has become admin of this group.`,
       type: "notification",
     });
