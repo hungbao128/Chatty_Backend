@@ -80,6 +80,7 @@ router.post(
 );
 router.post('/:id/leaveGroup', catchAsync(authentication), catchAsync(conservationController.leaveGroupConversation));
 router.post('/:id/changeName', catchAsync(authentication), catchAsync(conservationController.changeGroupConversationName));
+router.post('/:id/changeImage', catchAsync(authentication), catchAsync(conservationController.changeGroupConversationImage));
 router.post('/:id/disband', catchAsync(authentication), catchAsync(conservationController.disbandGroupConversation));
 router.post('/:id/transfer/:userId', catchAsync(authentication), catchAsync(conservationController.transferGroupConversationLeader));
 module.exports = router;

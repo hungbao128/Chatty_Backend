@@ -123,6 +123,24 @@ class ConservationController {
     });
   }
 
+  async changeGroupConversationImage(req, res, next) {
+    const { _id, name: userName } = req.user;
+    const { id } = req.params;
+    const { image } = req.body;
+    const result = await conservationService.changeGroupConversationImage({
+      conservationId: id,
+      userId: _id,
+      image,
+      userName
+    });
+
+    return res.status(200).json({
+      status: "success",
+      message: "Change group conversation image successfully.",
+      data: result,
+    });
+  }
+
   async disbandGroupConversation(req, res, next) {
     const { _id } = req.user;
     const { id } = req.params;

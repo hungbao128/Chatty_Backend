@@ -341,6 +341,37 @@ class ConservationService {
     });
   }
 
+  async changeGroupConversationImage({conservationId, userId, image, userName}) {
+    const conservation = await conservationRepository.findConservationById(
+      conservationId
+    );
+
+    if (!conservation) throw new BadRequest("Conservation not found.");
+
+    const imageUrl = await cloudinary.uploader.upload(image, {
+      folder: "chat-app",
+    });
+
+    conservation.image = imageUrl.secure_url;
+
+    const message = new MessageModel({
+      conservation: conservationId,
+      sender: userId,
+      content: `${userName} change group image.`,
+      type: "notification",
+    })
+    await Promise.all([conservation.save(), message.save()]);
+
+    socketIOObject.value.emit("message:notification", {
+      conservationId,
+      messages: [MessageHelper.generateMessage(message, userId)],
+      conversation: ConservationHelper.generateConservation(
+        await this.conservationPopulate(conservation),
+        userId
+      ),
+    });
+  }
+
   async disbandGroupConversation({ conservationId, userId }) {
     const conservation = await conservationRepository.findConservationById(
       conservationId
