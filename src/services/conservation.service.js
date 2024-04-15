@@ -120,10 +120,13 @@ class ConservationService {
     if (!conservation)
       throw new ServerErrorRequest("Cannot create conservation.");
 
-    socketIOObject.value.emit('conversation:new', {
+    socketIOObject.value.emit("conversation:new", {
       memberIds: members,
-      conversation: ConservationHelper.generateConservation(await this.conservationPopulate(conservation), creatorId)
-    })
+      conversation: ConservationHelper.generateConservation(
+        await this.conservationPopulate(conservation),
+        creatorId
+      ),
+    });
   }
 
   async addMembersToGroupConversation({ conservationId, userId, members }) {
@@ -345,7 +348,12 @@ class ConservationService {
     });
   }
 
-  async changeGroupConversationImage({conservationId, userId, image, userName}) {
+  async changeGroupConversationImage({
+    conservationId,
+    userId,
+    image,
+    userName,
+  }) {
     const conservation = await conservationRepository.findConservationById(
       conservationId
     );
@@ -363,7 +371,45 @@ class ConservationService {
       sender: userId,
       content: `${userName} change group image.`,
       type: "notification",
-    })
+    });
+    await Promise.all([conservation.save(), message.save()]);
+
+    const messagePopulate = await messageService.populateMessage(message);
+
+    socketIOObject.value.emit("message:notification", {
+      conservationId,
+      messages: [MessageHelper.generateMessage(messagePopulate, userId)],
+      conversation: ConservationHelper.generateConservation(
+        await this.conservationPopulate(conservation),
+        userId
+      ),
+    });
+  }
+
+  async changeGroupConversationImageV2({
+    conservationId,
+    userId,
+    image,
+    userName,
+  }) {
+    const conservation = await conservationRepository.findConservationById(
+      conservationId
+    );
+
+    if (!conservation) throw new BadRequest("Conservation not found.");
+
+    const imageUrl = await cloudinary.uploader.upload(image.path, {
+      folder: "chat-app",
+    });
+
+    conservation.image = imageUrl.secure_url;
+
+    const message = new MessageModel({
+      conservation: conservationId,
+      sender: userId,
+      content: `${userName} change group image.`,
+      type: "notification",
+    });
     await Promise.all([conservation.save(), message.save()]);
 
     const messagePopulate = await messageService.populateMessage(message);
@@ -390,17 +436,22 @@ class ConservationService {
       if (leader._id.toString() === userId.toString()) isLeader = true;
     });
 
-    if(!isLeader) throw new BadRequest("You cannot disband this group.");
-    
+    if (!isLeader) throw new BadRequest("You cannot disband this group.");
+
     await conservationRepository.deleteConservationById(conservationId);
 
     socketIOObject.value.emit("conversation:disband", {
-      conservationId
+      conservationId,
     });
   }
 
-  async transferGroupConversationLeader({conservationId, userId, newLeaderId}) {
-    if(userId === newLeaderId) throw new BadRequest("You cannot transfer to yourself.");
+  async transferGroupConversationLeader({
+    conservationId,
+    userId,
+    newLeaderId,
+  }) {
+    if (userId === newLeaderId)
+      throw new BadRequest("You cannot transfer to yourself.");
 
     const conservation = await conservationRepository.findConservationById(
       conservationId
@@ -409,25 +460,26 @@ class ConservationService {
     if (!conservation) throw new BadRequest("Conservation not found.");
 
     let isLeader = false;
-    let newLeaderName = '';
+    let newLeaderName = "";
     conservation.leaders.forEach((leader) => {
       if (leader._id.toString() === userId.toString()) {
-        isLeader = true
-      };
+        isLeader = true;
+      }
     });
 
     let isNewLeaderInConservation = false;
     conservation.members.forEach((member) => {
-      if(member._id.toString() === newLeaderId.toString()) {
+      if (member._id.toString() === newLeaderId.toString()) {
         newLeaderName = member.name;
-        isNewLeaderInConservation = true
-      };
+        isNewLeaderInConservation = true;
+      }
     });
 
-    if(!isNewLeaderInConservation) throw new BadRequest("New leader is not in this conservation.");
-    
-    if(!isLeader) throw new BadRequest("You cannot transfer this group.");
-    
+    if (!isNewLeaderInConservation)
+      throw new BadRequest("New leader is not in this conservation.");
+
+    if (!isLeader) throw new BadRequest("You cannot transfer this group.");
+
     const message = new MessageModel({
       conservation: conservationId,
       sender: newLeaderId,

@@ -95,7 +95,7 @@ class ConservationController {
     const result = await conservationService.leaveGroupConversation({
       conservationId: id,
       userId: _id,
-      userName: name
+      userName: name,
     });
 
     return res.status(200).json({
@@ -131,7 +131,7 @@ class ConservationController {
       conservationId: id,
       userId: _id,
       image,
-      userName
+      userName,
     });
 
     return res.status(200).json({
@@ -141,12 +141,31 @@ class ConservationController {
     });
   }
 
+  async changeGroupConversationImageV2(req, res, next) {
+    const { _id, name: userName } = req.user;
+    const { id } = req.params;
+    const image = req.file;
+
+    const result = await conservationService.changeGroupConversationImageV2({
+      conservationId: id,
+      userId: _id,
+      image,
+      userName,
+    });
+
+    return res.status(200).json({
+      status: "success",
+      message: "Change group conversation image successfully.",
+      // data: result,
+    });
+  }
+
   async disbandGroupConversation(req, res, next) {
     const { _id } = req.user;
     const { id } = req.params;
     const result = await conservationService.disbandGroupConversation({
       conservationId: id,
-      userId: _id,     
+      userId: _id,
     });
 
     return res.status(200).json({

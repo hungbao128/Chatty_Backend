@@ -78,9 +78,35 @@ router.post(
   catchAsync(authentication),
   catchAsync(conservationController.removeMembersFromGroupConversation)
 );
-router.post('/:id/leaveGroup', catchAsync(authentication), catchAsync(conservationController.leaveGroupConversation));
-router.post('/:id/changeName', catchAsync(authentication), catchAsync(conservationController.changeGroupConversationName));
-router.post('/:id/changeImage', catchAsync(authentication), catchAsync(conservationController.changeGroupConversationImage));
-router.post('/:id/disband', catchAsync(authentication), catchAsync(conservationController.disbandGroupConversation));
-router.post('/:id/transfer/:userId', catchAsync(authentication), catchAsync(conservationController.transferGroupConversationLeader));
+router.post(
+  "/:id/leaveGroup",
+  catchAsync(authentication),
+  catchAsync(conservationController.leaveGroupConversation)
+);
+router.post(
+  "/:id/changeName",
+  catchAsync(authentication),
+  catchAsync(conservationController.changeGroupConversationName)
+);
+router.post(
+  "/:id/changeImage",
+  catchAsync(authentication),
+  catchAsync(conservationController.changeGroupConversationImage)
+);
+router.post(
+  "/:id/changeImageV2",
+  catchAsync(authentication),
+  uploadDisk.single("image"),
+  catchAsync(conservationController.changeGroupConversationImageV2)
+);
+router.post(
+  "/:id/disband",
+  catchAsync(authentication),
+  catchAsync(conservationController.disbandGroupConversation)
+);
+router.post(
+  "/:id/transfer/:userId",
+  catchAsync(authentication),
+  catchAsync(conservationController.transferGroupConversationLeader)
+);
 module.exports = router;
