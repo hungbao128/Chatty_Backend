@@ -274,6 +274,11 @@ class ConservationService {
         userId
       ),
     });
+
+    socketIOObject.value.emit("conversation:removeMembers", {
+      conservationId,
+      members,
+    });
   }
 
   async leaveGroupConversation({ conservationId, userId, userName }) {
