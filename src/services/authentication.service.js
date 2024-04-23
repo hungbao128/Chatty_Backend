@@ -40,7 +40,7 @@ class AuthenticationService{
             throw new BadRequest('This email is already in use.');
         }
         // 2. Create user
-        const userObj = UserHelper.createUserObject({name, email, password, phone, dateOfBirth, gender});
+        const userObj = UserHelper.createUserObject({name, email, password, dateOfBirth, gender});
         const user = await userRepository.create(userObj);
         // 3. Generate token
         const [access_token, refresh_token] = await Promise.all([
