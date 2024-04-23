@@ -32,29 +32,22 @@ class AuthenticationService{
         });
     }
 
-    async register({email, password, phone, name, dateOfBirth, gender}){
+    async register({email, password, name, dateOfBirth, gender}){
 
         // 1. Check if email already exists
         const existingEmail = await userRepository.findByEmail(email);
         if(existingEmail){
             throw new BadRequest('This email is already in use.');
         }
-
-        // 2. Check if phone already exists
-        const existingPhone = await userRepository.findByPhone(phone);
-        if(existingPhone){
-            throw new BadRequest('This phone is already in use.');
-        }
-
-        // 3. Create user
+        // 2. Create user
         const userObj = UserHelper.createUserObject({name, email, password, phone, dateOfBirth, gender});
         const user = await userRepository.create(userObj);
-        // 4. Generate token
+        // 3. Generate token
         const [access_token, refresh_token] = await Promise.all([
             this.generateAccessToken(user._id),
             this.generateRefreshToken(user._id)
         ]);
-        // 5. Return token
+        // 4. Return token
         return {
             token: {
                 access_token,
@@ -64,9 +57,9 @@ class AuthenticationService{
         }
     }
 
-    async login({phone, password}){
+    async login({email, password}){
         // 1. Check if user exists
-        const user = await userRepository.findByPhone(phone);
+        const user = await userRepository.findByEmail(email);
         if(!user){
             throw new BadRequest('Bad credentials.');
         }

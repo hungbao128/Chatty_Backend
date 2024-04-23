@@ -18,13 +18,6 @@ const UserSchema = new Schema({
         required: true,
     },
 
-    phone: {
-        type: String,
-        required: true,
-        unique: true,
-        index: true
-    },
-
     dateOfBirth: {
         type: Date,
         required: true
