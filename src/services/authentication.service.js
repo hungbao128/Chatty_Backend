@@ -131,8 +131,8 @@ class AuthenticationService{
         }
 
         const otp = generateRandomNumber();
-        await VerifyEmaiLTokenRepository.deleteMany({email});
-        await VerifyEmaiLTokenRepository.create({email, otp});
+        await VerifyEmailTokenRepository.deleteMany({email});
+        await VerifyEmailTokenRepository.create({email, otp});
 
         const html = verifyEmailOtp(otp);
         await sendEmail(email, 'Verify Email OTP', html);
