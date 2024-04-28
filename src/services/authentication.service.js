@@ -141,6 +141,15 @@ class AuthenticationService{
         const html = verifyEmailOtp(otp);
         await sendEmail(email, 'Verify Email OTP', html);
     }
+
+    async verifyEmailToken(email, otp){
+        const result = await VerifyEmailTokenRepository.findOne({email, otp});
+        if(!result){
+            throw new BadRequest('OTP is invalid.');
+        }
+        
+        await VerifyEmailTokenRepository.deleteMany({email}); 
+    }
 }
 
 module.exports = new AuthenticationService();
