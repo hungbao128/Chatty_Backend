@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.put('/updateMe', catchAsync(validate(updateUserValidation)), catchAsync(authentication), catchAsync(userController.update));
 router.get('/getMe', catchAsync(authentication), catchAsync(userController.getMe));
-router.get('/findByPhone/:phone', catchAsync(authentication), catchAsync(userController.findByPhone));
+router.get('/findByEmail/:email', catchAsync(authentication), catchAsync(userController.findByEmail));
 router.put('/updateAvatar', catchAsync(authentication), uploadDisk.single('avatar'), catchAsync(userController.updateAvatar));
 router.put('/updateAvatarV2', catchAsync(authentication), catchAsync(userController.updateAvatarV2));
 router.put('/updateBackground', catchAsync(authentication), uploadDisk.single('background'), catchAsync(userController.updateBackground));
