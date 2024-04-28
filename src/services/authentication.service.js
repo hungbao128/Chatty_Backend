@@ -1,8 +1,12 @@
+const { sendEmail } = require('../configs/ses');
 const BadRequest = require('../core/BadRequest');
 const envConfig = require('../envConfig');
 const UserHelper = require('../helpers/UserHelper');
+const VerifyEmaiLTokenRepository = require('../repositories/VerifyEmaiLToken.repository');
+const { generateRandomNumber } = require('../utils');
 const { generateToken, verifyToken } = require('../utils/jwt');
 const userRepository = require('./../repositories/User.repository');
+const verifyEmailOtp = require('./../templates/verifyEmailOtp');
 
 class AuthenticationService{
     async generateAccessToken(userId){
@@ -47,6 +51,7 @@ class AuthenticationService{
             this.generateAccessToken(user._id),
             this.generateRefreshToken(user._id)
         ]);
+
         // 4. Return token
         return {
             token: {
@@ -116,6 +121,21 @@ class AuthenticationService{
 
         user.password = newPassword;
         await user.save();
+    }
+
+    async sendVerifyEmailToken(email){
+        const existingEmail = await userRepository.findByEmail(email);
+
+        if(existingEmail){
+            throw new BadRequest('Email is already in used. Please choose another email.');
+        }
+
+        const otp = generateRandomNumber();
+        await VerifyEmaiLTokenRepository.deleteMany({email});
+        await VerifyEmaiLTokenRepository.create({email, otp});
+
+        const html = verifyEmailOtp(otp);
+        await sendEmail(email, 'Verify Email OTP', html);
     }
 }
 

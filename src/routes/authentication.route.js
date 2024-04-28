@@ -11,5 +11,6 @@ router.post('/register', catchAsync(validate(registerValidation)), catchAsync(au
 router.post('/login', catchAsync(validate(loginValidation)), catchAsync(authenticationController.login));
 router.post('/refreshToken', catchAsync(authenticationController.refreshToken));
 router.post('/changePassword', catchAsync(authentication), catchAsync(authenticationController.changePassword));
+router.post('/sendVerifyEmailOtp', catchAsync(authenticationController.sendVerifyEmailOtp));
 
 module.exports = router;
