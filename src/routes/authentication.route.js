@@ -13,4 +13,5 @@ router.post('/refreshToken', catchAsync(authenticationController.refreshToken));
 router.post('/changePassword', catchAsync(authentication), catchAsync(authenticationController.changePassword));
 router.post('/sendVerifyEmailOtp', catchAsync(authenticationController.sendVerifyEmailOtp));
 
+
 module.exports = router;

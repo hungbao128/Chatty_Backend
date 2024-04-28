@@ -124,6 +124,10 @@ class AuthenticationService{
     }
 
     async sendVerifyEmailToken(email){
+        if(!email){
+            throw new BadRequest('Email is required.');
+        }
+        
         const existingEmail = await userRepository.findByEmail(email);
 
         if(existingEmail){
