@@ -107,6 +107,28 @@ class MessageController {
     });
   }
 
+  async replyFileMessage(req, res, next){
+    const { id } = req.params;
+    const { _id: userId } = req.user;
+    const { messageId: parentId } = req.params;
+    const { content } = req.body;
+    const files = req.files;
+
+    const message = await messageService.replyFileMessage({
+      userId,
+      conservationId: id,
+      files,
+      parentId,
+      content
+    });
+
+    return res.status(201).json({
+      status: "success",
+      message: "Message replied successfully",
+      data: message,
+    })
+  }
+
   async setReadMessage(req, res, next) {
     const { id } = req.params;
     const { _id: userId } = req.user;

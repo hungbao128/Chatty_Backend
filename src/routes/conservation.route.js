@@ -54,6 +54,12 @@ router.post(
   catchAsync(messageController.replyMessage)
 );
 router.post(
+  "/:id/messages/replyFiles/:messageId",
+  catchAsync(authentication),
+  uploadDisk.array("files"),
+  catchAsync(messageController.replyFileMessage)
+);
+router.post(
   "/:id/readMessages",
   catchAsync(authentication),
   catchAsync(messageController.setReadMessage)
