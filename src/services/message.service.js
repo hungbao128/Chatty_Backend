@@ -149,7 +149,7 @@ class MessageService {
     });
 
     return true;
-  };
+  }
 
   async sendFileMessage({ userId, conservationId, files, content = "" }) {
     const conversation = await ConservationRepository.isUserInConservation(
@@ -218,7 +218,7 @@ class MessageService {
     const filePromises = files.map(async (file) => {
       return await cloudinary.uploader.upload(file.data, {
         folder: "chat-app",
-        resource_type: 'auto'
+        resource_type: "auto",
       });
     });
 
@@ -270,7 +270,7 @@ class MessageService {
       userId,
       conservationId,
       files,
-      content
+      content,
     });
 
     const members = conversation.members;
