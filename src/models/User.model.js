@@ -18,13 +18,6 @@ const UserSchema = new Schema({
         required: true,
     },
 
-    phone: {
-        type: String,
-        required: true,
-        unique: true,
-        index: true
-    },
-
     dateOfBirth: {
         type: Date,
         required: true
@@ -49,7 +42,7 @@ const UserSchema = new Schema({
     background:{
         type: String,
         default: 'https://res.cloudinary.com/diribdgsz/image/upload/v1704685988/chat-app/clone-background_bb1l7i.png'
-    }
+    },
 }, {
     timestamps: true
 })

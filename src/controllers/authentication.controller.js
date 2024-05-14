@@ -42,6 +42,28 @@ class AuthenticationController {
             data: result
         });
     }
+
+    async sendVerifyEmailOtp(req, res, next){
+        const {email} = req.body;
+        const result = await AuthenticationService.sendVerifyEmailToken(email);
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Send otp successfully. Please check your email to verify.',
+            data: result
+        });
+    }
+
+    async verifyEmailOtp(req, res, next){
+        const {email, otp} = req.body;
+        const result = await AuthenticationService.verifyEmailToken(email, otp);
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Verify otp successfully.',
+            data: result
+        });
+    }
 }
 
 module.exports = new AuthenticationController();

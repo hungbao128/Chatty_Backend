@@ -58,14 +58,14 @@ class UserController{
         })
     }
 
-    async findByPhone(req, res, next){
-        const {phone} = req.params;
+    async findByEmail(req, res, next){
+        const {email} = req.params;
 
-        const result = await userService.findByPhone(phone, req.user._id);
+        const result = await userService.findByEmail(email, req.user._id);
 
         return res.status(200).json({
             status: "success",
-            message: 'Find user by phone successfully.',
+            message: 'Find user by email successfully.',
             data: result
         });
     }

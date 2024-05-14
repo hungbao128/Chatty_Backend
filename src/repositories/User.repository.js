@@ -21,8 +21,8 @@ class UserRepository{
         return await UserModel.findOneAndUpdate({_id: id}, data, {new: true});
     }
 
-    async findUserByPhone(phone, currentId){
-        return await UserModel.findOne({phone, _id: {$ne: currentId}})
+    async findUserByEmail(email, currentId){
+        return await UserModel.findOne({email, _id: {$ne: currentId}})
     }
     
     async findUserById(id){

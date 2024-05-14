@@ -45,8 +45,8 @@ class UserService {
         return UserHelper.generateUserResponse(data.toObject());
     }
 
-    async findByPhone(phone, currentId){
-        const user = await UserRepository.findUserByPhone(phone, currentId);
+    async findByEmail(email, currentId){
+        const user = await UserRepository.findUserByEmail(email, currentId);
 
         if(!user) throw new BadRequest('User not found');
 

@@ -1,8 +1,12 @@
+const { sendEmail } = require('../configs/ses');
 const BadRequest = require('../core/BadRequest');
 const envConfig = require('../envConfig');
 const UserHelper = require('../helpers/UserHelper');
+const VerifyEmailTokenRepository = require('../repositories/VerifyEmailToken.repository');
+const { generateRandomNumber } = require('../utils');
 const { generateToken, verifyToken } = require('../utils/jwt');
 const userRepository = require('./../repositories/User.repository');
+const verifyEmailOtp = require('./../templates/verifyEmailOtp');
 
 class AuthenticationService{
     async generateAccessToken(userId){
@@ -32,29 +36,23 @@ class AuthenticationService{
         });
     }
 
-    async register({email, password, phone, name, dateOfBirth, gender}){
+    async register({email, password, name, dateOfBirth, gender}){
 
         // 1. Check if email already exists
         const existingEmail = await userRepository.findByEmail(email);
         if(existingEmail){
             throw new BadRequest('This email is already in use.');
         }
-
-        // 2. Check if phone already exists
-        const existingPhone = await userRepository.findByPhone(phone);
-        if(existingPhone){
-            throw new BadRequest('This phone is already in use.');
-        }
-
-        // 3. Create user
-        const userObj = UserHelper.createUserObject({name, email, password, phone, dateOfBirth, gender});
+        // 2. Create user
+        const userObj = UserHelper.createUserObject({name, email, password, dateOfBirth, gender});
         const user = await userRepository.create(userObj);
-        // 4. Generate token
+        // 3. Generate token
         const [access_token, refresh_token] = await Promise.all([
             this.generateAccessToken(user._id),
             this.generateRefreshToken(user._id)
         ]);
-        // 5. Return token
+
+        // 4. Return token
         return {
             token: {
                 access_token,
@@ -64,9 +62,9 @@ class AuthenticationService{
         }
     }
 
-    async login({phone, password}){
+    async login({email, password}){
         // 1. Check if user exists
-        const user = await userRepository.findByPhone(phone);
+        const user = await userRepository.findByEmail(email);
         if(!user){
             throw new BadRequest('Bad credentials.');
         }
@@ -123,6 +121,34 @@ class AuthenticationService{
 
         user.password = newPassword;
         await user.save();
+    }
+
+    async sendVerifyEmailToken(email){
+        if(!email){
+            throw new BadRequest('Email is required.');
+        }
+        
+        const existingEmail = await userRepository.findByEmail(email);
+
+        if(existingEmail){
+            throw new BadRequest('Email is already in used. Please choose another email.');
+        }
+
+        const otp = generateRandomNumber();
+        await VerifyEmailTokenRepository.deleteMany({email});
+        await VerifyEmailTokenRepository.create({email, otp});
+
+        const html = verifyEmailOtp(otp);
+        await sendEmail(email, 'Verify Email OTP', html);
+    }
+
+    async verifyEmailToken(email, otp){
+        const result = await VerifyEmailTokenRepository.findOne({email, otp});
+        if(!result){
+            throw new BadRequest('OTP is invalid.');
+        }
+        
+        await VerifyEmailTokenRepository.deleteMany({email}); 
     }
 }
 
