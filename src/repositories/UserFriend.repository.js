@@ -2,9 +2,7 @@ const UserFriendModel = require('./../models/UserFriend.model');
 
 class UserFriendRepository{
     async requestAddFriend(userId, friendId){
-        // console.log(`USER ID: ${userId} \t FRIEND ID: ${friendId}`);
-        return await UserFriendModel.create({requester: userId, recipient: friendId, status: 'pending'})
-        .populate('requester recipient', '-password -createdAt -updatedAt -email -__v');
+        return await UserFriendModel.create({requester: userId, recipient: friendId, status: 'pending'});
     }
 
     async isFriend(userId, friendId){
@@ -38,7 +36,6 @@ class UserFriendRepository{
 
     async acceptFriendRequest(userId, friendId){
         return await UserFriendModel.updateOne({_id: friendId, recipient: userId}, {status: 'accepted'})
-        .populate('requester recipient', '-password -createdAt -updatedAt -email -__v');
     }
 
     async isUserFriend(userId, friendId){
