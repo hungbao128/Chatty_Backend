@@ -8,6 +8,7 @@ const uploadDisk = multer({
     filename: function (req, file, cb) {
       cb(null, `${Date.now()}- ${file.originalname}`);
     },
+    fileSize: 1024 * 1024 * 10 // 10MB,
   }),
 
   limits: {
