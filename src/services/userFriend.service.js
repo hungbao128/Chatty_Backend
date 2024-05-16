@@ -13,8 +13,9 @@ class UserFriendService{
         if(await UserFriendRepository.isRelationshipExist(userId, friendId)) throw new BadRequest('You already have a relationship with this user.');
         
         const result = await UserFriendRepository.requestAddFriend(userId, friendId);
+        
         const requestInfo = await UserRepository.findById(userId);
-        socketIOObject.value.emit('friend:request', { userId: friendId, friendRequestId: result.id, requestInfo: {
+        socketIOObject.value.emit('friend:request', { userId: friendId, friendRequest: result, requestInfo: {
             _id: requestInfo._id,
             name: requestInfo.name,
             avatar: requestInfo.avatar
@@ -28,7 +29,7 @@ class UserFriendService{
 
         const result = await UserFriendRepository.acceptFriendRequest(userId, friendId);
         const userInfo = await UserRepository.findById(userId);
-        socketIOObject.value.emit('friend:accept', { userId: friendId, userInfo: {
+        socketIOObject.value.emit('friend:accept', { userId: friendId, friendRequest: result, userInfo: {
             _id: userInfo._id,
             name: userInfo.name,
             avatar: userInfo.avatar
