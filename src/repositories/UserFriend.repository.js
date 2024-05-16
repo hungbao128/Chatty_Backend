@@ -49,7 +49,7 @@ class UserFriendRepository{
     }
 
     async rejectFriendRequest(userId, friendId){
-        return await UserFriendModel.deleteOne({_id: friendId, recipient: userId});
+        return await UserFriendModel.deleteOne({_id: friendId});
     }
 
     async isPendingRequest(userId, friendId){
