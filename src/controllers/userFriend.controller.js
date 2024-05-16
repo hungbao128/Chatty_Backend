@@ -4,21 +4,23 @@ class UserFriendController{
     async requestAddFriend(req, res, next){
         const {user} = req;
         const {id} = req.params;
-        await userFriendService.requestAddFriend(user._id, id);
+        const result = await userFriendService.requestAddFriend(user._id, id);
         return res.status(200).json({
             status: "success",
-            message: "Friend request sent successfully!"
+            message: "Friend request sent successfully!",
+            data: result
         });
     }
 
     async acceptFriendRequest(req, res, next){
         const {user} = req;
         const {id} = req.params;
-        await userFriendService.acceptFriendRequest(user._id, id);
+        const result = await userFriendService.acceptFriendRequest(user._id, id);
 
         return res.status(200).json({
             status: "success",
-            message: "Friend request accepted successfully!"
+            message: "Friend request accepted successfully!",
+            data: result
         });
     }
 
