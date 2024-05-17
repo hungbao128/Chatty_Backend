@@ -27,9 +27,18 @@ class UserFriendService{
     async acceptFriendRequest(userId, friendId){
         if(await UserFriendRepository.isUserFriend(userId, friendId)) throw new BadRequest('You are already friends.');
 
-        const result = await UserFriendRepository.acceptFriendRequest(userId, friendId);
+        const pendingRequest = await UserFriendRepository.findById(friendId);
+        if(!pendingRequest) throw new BadRequest('Friend request not found.');
+        if(pendingRequest.recipient != userId) throw new BadRequest('You are not the recipient of this friend request.');
+
+        pendingRequest.status = 'accepted';
+        await pendingRequest.save();
+        // const result = await UserFriendRepository.acceptFriendRequest(userId, friendId);
+        const userIdFriend = pendingRequest.requester;
+
+        console.log(userIdFriend, result);
         const userInfo = await UserRepository.findById(userId);
-        socketIOObject.value.emit('friend:accept', { userId: friendId, friendRequest: result, userInfo: {
+        socketIOObject.value.emit('friend:accept', { userId: userIdFriend, friendRequest: result, userInfo: {
             _id: userInfo._id,
             name: userInfo.name,
             avatar: userInfo.avatar

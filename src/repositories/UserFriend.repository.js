@@ -1,6 +1,10 @@
 const UserFriendModel = require('./../models/UserFriend.model');
 
 class UserFriendRepository{
+    async findById(id){
+        return await UserFriendModel.findById(id);
+    }
+    
     async requestAddFriend(userId, friendId){
         return await UserFriendModel.create({requester: userId, recipient: friendId, status: 'pending'});
     }
@@ -35,7 +39,7 @@ class UserFriendRepository{
     }
 
     async acceptFriendRequest(userId, friendId){
-        return await UserFriendModel.findOneAndUpdate({_id: friendId, recipient: userId}, {status: 'accepted'}, {new: true, upsert: true})
+        return await UserFriendModel.findOneAndUpdate({_id: friendId, recipient: userId}, {status: 'accepted'});
     }
 
     async isUserFriend(userId, friendId){
