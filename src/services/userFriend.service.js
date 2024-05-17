@@ -46,13 +46,26 @@ class UserFriendService{
     }
 
     async rejectFriendRequest(userId, friendId){
-        return await UserFriendRepository.rejectFriendRequest(userId, friendId);
+        const request = await UserFriendRepository.findById(friendId);
+        if(!request) throw new BadRequest('Friend request not found.');
+        if(request.recipient.toString() != userId.toString()) throw new BadRequest('You are not the recipient of this friend request.');
+
+        const reuslt = await UserFriendRepository.rejectFriendRequest(userId, friendId);
+        socketIOObject.value.emit('friend:reject', { userId: request.requester, friendRequest: request });
+        return reuslt;
+
     }
 
     async cancelFriendRequest(userId, friendId){
         if(await UserFriendRepository.isUserFriend(userId, friendId)) throw new BadRequest('You are already friends.');
 
-        return await UserFriendRepository.rejectFriendRequest(userId, friendId);
+        const request = await UserFriendRepository.findById(friendId);
+        if(!request) throw new BadRequest('Friend request not found.');
+        if(request.requester.toString() != userId.toString()) throw new BadRequest('You are not the requester of this friend request.');
+        
+        const result = await UserFriendRepository.rejectFriendRequest(userId, friendId);
+        socketIOObject.value.emit('friend:cancel', { userId: request.recipient, friendRequest: request });
+        return result;
     }
 
     async removeFriend(userId, friendId){
