@@ -29,7 +29,7 @@ class UserFriendService{
 
         const result = await UserFriendRepository.acceptFriendRequest(userId, friendId);
         const userInfo = await UserRepository.findById(userId);
-        socketIOObject.value.emit('friend:accept', { userId: friendId, friendRequestId: friendId, userInfo: {
+        socketIOObject.value.emit('friend:accept', { userId: friendId, friendRequest: result, userInfo: {
             _id: userInfo._id,
             name: userInfo.name,
             avatar: userInfo.avatar

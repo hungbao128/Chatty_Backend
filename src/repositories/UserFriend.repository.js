@@ -35,7 +35,7 @@ class UserFriendRepository{
     }
 
     async acceptFriendRequest(userId, friendId){
-        return await UserFriendModel.updateOne({_id: friendId, recipient: userId}, {status: 'accepted'})
+        return await UserFriendModel.findOneAndUpdate({_id: friendId, recipient: userId}, {status: 'accepted'}, {new: true, upsert: true})
     }
 
     async isUserFriend(userId, friendId){
