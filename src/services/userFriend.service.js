@@ -71,7 +71,11 @@ class UserFriendService{
     async removeFriend(userId, friendId){
         if(!await UserFriendRepository.isUserFriend(userId, friendId)) throw new BadRequest('You are not friends.');
 
-        return await UserFriendRepository.removeFriend(friendId);
+        const request = await UserFriendRepository.findById(friendId);
+        if(!request) throw new BadRequest('Friend request not found.');
+
+        await UserFriendRepository.removeFriend(friendId);
+        socketIOObject.value.emit('friend:remove', { userId: request.requester, friendRequest: request });
     }
 
     async getCurrentUserFriends(userId){
