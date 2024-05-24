@@ -58,6 +58,7 @@ class ApplicationServer {
       },
     });
 
+    console.log("Socket server created");
     return io;
   }
 
